@@ -40,3 +40,6 @@
 | [Step 3. Component 구성하기](./docs/step3.md)                       | `state` `class` `OOP` `component`                             |
 | [Step 4. 옵저버 패턴 학습](./docs/step4.md)                            | `proxy` `object api` `observer`                               |
 
+## Reference
+
+https://junilhwang.notion.site/8a696794843742b981e3be6143260301
