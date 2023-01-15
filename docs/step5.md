@@ -49,11 +49,11 @@
    // 1
    ```
 
-- [ ]  여태까지 만든 어플리케이션에 redux 적용하기
+- [ ]  여태까지 만든 어플리케이션에 store 적용하기
 
 ### 선택 요구사항
 
-- [ ]  middleware 적용해보기
+- [ ]  store에 middleware 적용해보기
 
    ```tsx
    function counter(state = 0, action) {
