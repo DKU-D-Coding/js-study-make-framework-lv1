@@ -24,6 +24,11 @@ function App() {
     setTodo("");
   };
 
+  const handleDeleteTodo = (id: number) => {
+    const newTodos = todos.filter((value) => value.id !== id);
+    setTodos(newTodos);
+  };
+
   return (
     <div>
       <h1>To do List</h1>
@@ -38,7 +43,12 @@ function App() {
       </form>
       <ul>
         {todos.map(({ id, content }) => (
-          <li key={id}>{content}</li>
+          <li key={id}>
+            {content}
+            <button type="button" onClick={() => handleDeleteTodo(id)}>
+              삭제
+            </button>
+          </li>
         ))}
       </ul>
     </div>
