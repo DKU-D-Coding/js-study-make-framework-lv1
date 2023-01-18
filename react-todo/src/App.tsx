@@ -1,24 +1,46 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { ChangeEvent, FormEvent, useState } from "react";
+
+interface Todo {
+  id: number;
+  content: string;
+}
 
 function App() {
+  const [todo, setTodo] = useState<string>("");
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  const handleChangeTodo = (e: ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setTodo(value);
+  };
+
+  const handleAddTodo = (e: FormEvent) => {
+    e.preventDefault();
+
+    const newTodos = [...todos, { id: todos.length, content: todo }];
+    setTodos(newTodos);
+    setTodo("");
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>To do List</h1>
+      <form onSubmit={handleAddTodo}>
+        <input
+          type="text"
+          placeholder="할 일을 입력하세요."
+          onChange={handleChangeTodo}
+          value={todo}
+        />
+        <button type="submit">추가</button>
+      </form>
+      <ul>
+        {todos.map(({ id, content }) => (
+          <li key={id}>{content}</li>
+        ))}
+      </ul>
     </div>
   );
 }
