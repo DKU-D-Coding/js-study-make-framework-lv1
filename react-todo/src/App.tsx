@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import TodoForm from "./components/TodoForm";
 
 interface Todo {
   id: number;
@@ -81,30 +82,26 @@ function App() {
   return (
     <div>
       <h1>To do List</h1>
-      <form onSubmit={addTodo}>
-        <input
-          type="text"
-          placeholder="할 일을 입력하세요."
-          onChange={changeTodo}
-          value={todo}
-        />
-        <button type="submit">추가</button>
-      </form>
+      <TodoForm
+        handleSubmit={addTodo}
+        handleChange={changeTodo}
+        placeholder={"할 일을 입력하세요."}
+        value={todo}
+        buttonText={"추가"}
+      />
       <ul>
         {todos
           .sort((a, b) => a.id - b.id)
           .map((value) => (
             <li key={value.id}>
               {editing && editing.id === value.id ? (
-                <form onSubmit={completeEditing}>
-                  <input
-                    type="text"
-                    placeholder="할 일을 수정하세요."
-                    onChange={changeEditing}
-                    value={editing.content}
-                  />
-                  <button type="submit">완료</button>
-                </form>
+                <TodoForm
+                  handleSubmit={completeEditing}
+                  handleChange={changeEditing}
+                  placeholder={"할 일을 수정하세요."}
+                  value={editing.content}
+                  buttonText={"완료"}
+                />
               ) : (
                 <>
                   <label>
