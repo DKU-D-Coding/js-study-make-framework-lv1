@@ -24,7 +24,11 @@ function App() {
 
     const newTodos = [
       ...todos,
-      { id: todos.length, content: todo, isDone: false },
+      {
+        id: todos.length > 0 ? todos.at(-1)!.id + 1 : 0,
+        content: todo,
+        isDone: false,
+      },
     ];
     setTodos(newTodos);
     setTodo("");
