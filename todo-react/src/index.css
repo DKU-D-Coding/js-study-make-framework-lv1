@@ -1,0 +1,11 @@
+body {
+  margin: 0;
+  width: 100vw;
+  font-family: "Noto Sans KR", sans-serif;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+* {
+  box-sizing: border-box;
+}

@@ -1,0 +1,36 @@
+#wrapper {
+  cursor: pointer;
+  user-select: none;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  margin: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.done {
+  text-decoration: line-through;
+  color: #888;
+  transition: all 0.2s ease-in-out;
+  background-color: #323232;
+}
+
+.undone {
+  background-color: #e0e0e0;
+}
+
+#created-at {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+#control-container {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+#control-container > * {
+  margin: 0 0.5rem;
+}
