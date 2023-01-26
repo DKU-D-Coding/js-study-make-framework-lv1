@@ -1,43 +1,42 @@
 <script>
 const LS_TAG = "toDos";
-let id = 0;
 export default {
   data() {
     return {
       text: "",
       toDos: [],
-      editing: false,
       editIndex: 0,
     };
   },
+  computed: {
+    editing() {
+      return this.editIndex !== 0;
+    },
+  },
   mounted() {
     const stoargeToDos = localStorage.getItem(LS_TAG);
-    if (stoargeToDos !== null) {
-      this.toDos = JSON.parse(stoargeToDos);
-    }
+    if (stoargeToDos !== null) this.toDos = JSON.parse(stoargeToDos);
   },
   methods: {
     createToDo() {
       if (this.text !== "") {
-        this.toDos.push({ id: id++, text: this.text });
+        this.toDos.push({ id: Date.now(), text: this.text });
         this.saveToDos();
         this.text = "";
       }
     },
     startEditToDo(toDo) {
-      console.log(toDo);
       this.editIndex = toDo.id;
-      this.editing = true;
-      this.text = this.toDos[toDo.id].text;
+      this.text = this.toDos.find((toDo) => toDo.id === this.editIndex).text;
     },
     finishEditToDo() {
-      this.toDos[this.editIndex].text = this.text;
+      this.toDos.find((toDo) => toDo.id === this.editIndex).text = this.text;
       this.saveToDos();
-      this.editing = false;
       this.text = "";
+      this.editIndex = 0;
     },
-    deleteToDo(toDo) {
-      this.toDos = this.toDos.filter((t) => t !== toDo);
+    deleteToDo(thisToDo) {
+      this.toDos = this.toDos.filter((toDo) => toDo.id !== thisToDo.id);
       this.saveToDos();
     },
     saveToDos() {
@@ -69,5 +68,3 @@ export default {
     </ul>
   </main>
 </template>
-
-<style></style>
