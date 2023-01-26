@@ -1,53 +1,83 @@
-import { FormEvent, useEffect, useState } from "react";
+import {
+  BaseSyntheticEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-const App = () => {
+const LS_TAG = "toDos";
+
+interface ToDo {
+  id: number;
+  text: string;
+}
+
+function App() {
   const [text, setText] = useState("");
-  const [toDos, setTodos] = useState([""]);
+  const [toDos, setTodos] = useState<ToDo[]>([]);
   const [editing, setEditing] = useState(false);
-  const [editIndex, setEditIndex] = useState(0);
-
-  const LS_TAG = "toDos";
+  const [editingId, setEditingId] = useState(0);
 
   useEffect(() => {
     const stoargeToDos = localStorage.getItem(LS_TAG);
-    if (stoargeToDos !== null) {
-      setTodos(JSON.parse(stoargeToDos));
-    }
+    setTodos(stoargeToDos ? JSON.parse(stoargeToDos) : []);
   }, []);
 
-  const createToDo = (e: FormEvent) => {
-    e.preventDefault();
+  const toDoStorage = {
+    getOne(id: number) {
+      const find = toDos.find((toDo) => toDo.id === id);
+      return find ? find : null;
+    },
+    replace(toDos: ToDo[]) {
+      localStorage.setItem(LS_TAG, JSON.stringify(toDos));
+      setTodos(toDos);
+    },
+  };
+
+  const createToDo = () => {
     if (text !== "") {
-      const newToDos = [text, ...toDos];
-      saveToDos(newToDos);
+      const newToDo: ToDo = { id: Date.now(), text };
+      toDoStorage.replace([newToDo, ...toDos]);
       setText("");
     }
   };
 
-  const startEditToDo = (index: number) => {
-    setEditIndex(index);
-    setEditing(true);
-    setText(toDos[index]);
+  const startEditToDo = (id: number) => {
+    const thisToDo = toDoStorage.getOne(id);
+    if (thisToDo) {
+      setEditing(true);
+      setEditingId(id);
+      setText(thisToDo.text);
+    }
   };
 
-  const finishEditToDo = (e: FormEvent) => {
-    e.preventDefault();
-    const newToDos = toDos;
-    newToDos[editIndex] = text;
-    saveToDos(newToDos);
+  const finishEditToDo = () => {
+    toDos.find((toDo) => toDo.id === editingId)!.text = text;
+    toDoStorage.replace(toDos);
     setEditing(false);
     setText("");
   };
 
-  const deleteToDo = (index: number) => {
-    const newToDos = toDos.filter((toDo) => toDo !== toDos[index]);
-    saveToDos(newToDos);
+  const deleteToDo = (id: number) => {
+    const newToDos = toDos.filter((toDo) => toDo.id !== id);
+    toDoStorage.replace(newToDos);
   };
 
-  const saveToDos = (newToDos: string[]) => {
-    setTodos(newToDos);
-    localStorage.setItem(LS_TAG, JSON.stringify(newToDos));
+  const title = useMemo(
+    () => (editing ? "Edit to do" : "Add your to do"),
+    [editing]
+  );
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    editing ? finishEditToDo() : createToDo();
   };
+
+  const handleText = useCallback((e: BaseSyntheticEvent) => {
+    setText(e.target.value);
+  }, []);
 
   return (
     <>
@@ -55,28 +85,22 @@ const App = () => {
         <h1>To Do React!</h1>
       </header>
       <main>
-        <form onSubmit={editing ? finishEditToDo : createToDo}>
-          {editing ? <h3>Edit to do</h3> : <h3>Add your to do</h3>}
-          <input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
+        <form onSubmit={handleSubmit}>
+          <h3>{title}</h3>
+          <input type="text" value={text} onChange={handleText} />
         </form>
         <ul>
-          {toDos.map((toDo, index) =>
-            toDo === "" ? null : (
-              <li key={index}>
-                <span>{toDo}</span>
-                <span onClick={() => startEditToDo(index)}> ✏️</span>
-                <span onClick={() => deleteToDo(index)}> ✅</span>
-              </li>
-            )
-          )}
+          {toDos.map((toDo) => (
+            <li key={toDo.id}>
+              <span>{toDo.text}</span>
+              <span onClick={() => startEditToDo(toDo.id)}> ✏️</span>
+              <span onClick={() => deleteToDo(toDo.id)}> ✅</span>
+            </li>
+          ))}
         </ul>
       </main>
     </>
   );
-};
+}
 
 export default App;
