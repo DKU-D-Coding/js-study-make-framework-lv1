@@ -148,11 +148,10 @@ const Card = ({
   );
 
   useEffect(() => {
-    if (isEditing) {
-      inputRef.current?.focus();
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
     }
-  }, [isEditing, inputRef]);
-
+  }, [isEditing]);
   return (
     <Wrapper done={completed}>
       <TitleContainer>
