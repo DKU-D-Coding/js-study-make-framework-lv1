@@ -1,7 +1,7 @@
 <template>
   <li id="wrapper">
     <div id="title-container">
-      <form v-if="isEditing" @submit="handleSubmit">
+      <form v-if="isEditing" @submit.prevent="handleSubmit">
         <input type="text" id="edit-todo-input" />
       </form>
       <h3 id="title" :class="{ done: isDone }" v-else>
@@ -34,8 +34,7 @@ export default {
     toggleDone: function () {
       this.isDone = !this.isDone;
     },
-    handleSubmit: function (e) {
-      e.preventDefault();
+    handleSubmit: function () {
       this.$emit("setTitle", { title: e.target[0].value, id: this.id });
       this.isEditing = false;
     },

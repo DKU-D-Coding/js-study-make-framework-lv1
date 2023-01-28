@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import styled from "styled-components";
 import { Todo } from "todo";
 import Card from "../components/Card";
@@ -57,18 +57,18 @@ const Home = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
 
   const todoMethods = {
-    handleDeleteTodo: (id: number) => {
+    del: (id: number) => {
       setTodos(todos.filter((todo) => todo.id !== id));
     },
 
-    handleEditTodo: (id: number, newTitle: string) => {
+    edit: (id: number, newTitle: string) => {
       setTodos(
         todos.map((todo) =>
           todo.id === id ? { ...todo, title: newTitle } : todo
         )
       );
     },
-    handleCompleteTodo: (id: number) => {
+    toggleDone: (id: number) => {
       setTodos(
         todos.map((todo) =>
           todo.id === id ? { ...todo, completed: !todo.completed } : todo
@@ -90,6 +90,11 @@ const Home = () => {
     setNewTodoTitle("");
   };
 
+  const handleNewTodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.currentTarget;
+    setNewTodoTitle(value);
+  };
+
   return (
     <Wrapper>
       <AppHeader>
@@ -104,7 +109,7 @@ const Home = () => {
         <AddTodoInput
           placeholder="add new todo..."
           value={newTodoTitle}
-          onChange={({ currentTarget: { value } }) => setNewTodoTitle(value)}
+          onChange={handleNewTodoChange}
         />
       </AddTodoForm>
     </Wrapper>

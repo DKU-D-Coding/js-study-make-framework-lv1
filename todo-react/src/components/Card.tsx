@@ -73,9 +73,9 @@ const NewTodoInput = styled.input.attrs({
 const Title = styled.h3``;
 
 interface CardProps extends Todo {
-  handleEditTodo: (id: number, newTitle: string) => void;
-  handleDeleteTodo: (id: number) => void;
-  handleCompleteTodo: (id: number) => void;
+  edit: (id: number, newTitle: string) => void;
+  del: (id: number) => void;
+  toggleDone: (id: number) => void;
 }
 
 const Card = ({
@@ -83,15 +83,15 @@ const Card = ({
   createdAt,
   id,
   completed,
-  handleEditTodo,
-  handleDeleteTodo,
-  handleCompleteTodo,
+  edit,
+  del,
+  toggleDone,
 }: CardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const editTitle = ({
+  const handleEditTitle = ({
     currentTarget: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     setNewTitle(value);
@@ -105,17 +105,21 @@ const Card = ({
   const submitEditedTitle = useCallback(
     (e?: React.FormEvent<HTMLFormElement>) => {
       e?.preventDefault();
-      handleEditTodo(id, newTitle);
+      edit(id, newTitle);
       toggleEdit();
     },
-    [handleEditTodo, id, newTitle, toggleEdit]
+    [edit, id, newTitle, toggleEdit]
   );
 
   const todoContent = useMemo(
     () =>
       isEditing ? (
         <NewTodoForm onSubmit={submitEditedTitle}>
-          <NewTodoInput ref={inputRef} value={newTitle} onChange={handleChangeTitle} />
+          <NewTodoInput
+            ref={inputRef}
+            value={newTitle}
+            onChange={handleEditTitle}
+          />
         </NewTodoForm>
       ) : (
         <Title>{title}</Title>
@@ -133,18 +137,11 @@ const Card = ({
       ) : (
         <>
           <MdEdit onClick={toggleEdit} />
-          <MdDone onClick={() => handleCompleteTodo(id)} />
-          <MdClose onClick={() => handleDeleteTodo(id)} />
+          <MdDone onClick={() => toggleDone(id)} />
+          <MdClose onClick={() => del(id)} />
         </>
       ),
-    [
-      isEditing,
-      submitEditedTitle,
-      toggleEdit,
-      handleCompleteTodo,
-      id,
-      handleDeleteTodo,
-    ]
+    [isEditing, toggleEdit, submitEditedTitle, toggleDone, id, del]
   );
 
   useEffect(() => {

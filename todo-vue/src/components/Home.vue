@@ -12,8 +12,13 @@
           @delete="deleteTodo"
         />
       </ul>
-      <form @submit="addTodo">
-        <input id="new-todo-input" type="text" v-model="title" placeholder="add new todo..." />
+      <form @submit.prevent="addTodo">
+        <input
+          id="new-todo-input"
+          type="text"
+          v-model="title"
+          placeholder="add new todo..."
+        />
       </form>
     </main>
   </div>
@@ -27,7 +32,7 @@ export default {
   data() {
     return {
       todos: [],
-      title: '',
+      title: "",
     };
   },
   methods: {
