@@ -27,17 +27,16 @@ export default {
   data() {
     return {
       todos: [],
+      title: '',
     };
   },
   methods: {
-    addTodo: function (e) {
-      e.preventDefault();
+    addTodo() {
       const newTodo = {
         id: this.todos.length + 1,
-        title: e.target[0].value,
+        title: this.title,
       };
       this.todos.push(newTodo);
-      e.target[0].value = "";
     },
     editTodo: function (e) {
       this.todos.forEach((todo) => {
