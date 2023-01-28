@@ -13,7 +13,7 @@
         />
       </ul>
       <form @submit="addTodo">
-        <input id="new-todo-input" type="text" placeholder="add new todo..." />
+        <input id="new-todo-input" type="text" v-model="title" placeholder="add new todo..." />
       </form>
     </main>
   </div>
