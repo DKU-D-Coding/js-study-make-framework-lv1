@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>2주차 JavaScript 실습</title>
 </head>
 <body>
@@ -22,21 +23,21 @@
     </div>
 </body>
 <script>
-    // 목록 추가 삭제 수정 토글
-    // let todoList = [];
+    // 수정
     let id = 0;
 
     const appendTodo = (id, text) => {
         const newTodoElem = document.createElement("li");
-        
+
         const checkboxElem = document.createElement("input");
         checkboxElem.setAttribute("type", "checkbox");
+        checkboxElem.addEventListener('click', () => {
+            textElem.classList.toggle('checked');
+        });
 
         const textElem = document.createElement("span");
         textElem.innerHTML = text;
-        if(!checkboxElem){
-            textElem.innerHTML = "완료되었습니다";
-        }
+
 
         const updateBtnElem = document.createElement('button');
         //delBtnElem.addEventListener('click', () =>  updateTodo(todo.id))
