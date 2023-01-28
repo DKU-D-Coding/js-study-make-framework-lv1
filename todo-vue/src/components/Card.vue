@@ -24,8 +24,8 @@ export default {
     return { createdAt: new Date(), isEditing: false, isDone: false };
   },
   props: {
-    title: String,
-    id: Number,
+    title: { type: String, required: true },
+    id: { type: Number, required: true },
   },
   methods: {
     toggleEdit: function () {
