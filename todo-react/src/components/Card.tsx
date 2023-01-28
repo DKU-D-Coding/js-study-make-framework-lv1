@@ -115,7 +115,7 @@ const Card = ({
     () =>
       isEditing ? (
         <NewTodoForm onSubmit={submitEditedTitle}>
-          <NewTodoInput ref={inputRef} value={newTitle} onChange={editTitle} />
+          <NewTodoInput ref={inputRef} value={newTitle} onChange={handleChangeTitle} />
         </NewTodoForm>
       ) : (
         <Title>{title}</Title>
