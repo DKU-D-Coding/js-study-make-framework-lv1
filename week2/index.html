@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2주차 JavaScript 실습</title>
+</head>
+<body>
+    <div className="App">
+        <h3>2주차 JavaScript 실습 - 할 일</h3>
+        <input type="text" placeholder="새로운 할 일을 입력해주세요!"/>
+        <button onClick={addTodo}>추가</button>
+        <ul class="todo-list">
+            // 완료된 일
+            <li class="todo-item checked">
+              <div class="checkbox">✔</div>
+              <div class="todo">첫번째 할 일</div>
+              <button class="delBtn">x</button>
+            </li>
+            // 완료되지 않은 일
+            <li class="todo-item">
+              <div class="checkbox"></div>
+              <div class="todo">두번째 할 일</div>
+              <button class="delBtn">x</button>
+            </li>
+          </ul>
+    </div>
+</body>
+</html>
