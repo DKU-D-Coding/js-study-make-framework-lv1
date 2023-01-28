@@ -8,7 +8,7 @@
           :key="todo.id"
           :title="todo.title"
           :id="todo.id"
-          @setTitle="editTodo"
+          @edit="editTodo"
           @delete="deleteTodo"
         />
       </ul>
