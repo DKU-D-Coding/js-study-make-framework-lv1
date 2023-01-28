@@ -53,7 +53,7 @@ const AddTodoInput = styled.input.attrs({ type: "text" })`
 `;
 
 const Home = () => {
-  const [newTodoTitle, setNewTodoTitle] = useState<string>("");
+  const [newTodoTitle, setNewTodoTitle] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
 
   const todoMethods = {
