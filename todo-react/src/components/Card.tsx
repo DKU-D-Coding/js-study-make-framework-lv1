@@ -123,7 +123,7 @@ const Card = ({
     [isEditing, newTitle, submitEditedTitle, title]
   );
 
-  const controlContainer = useMemo(
+  const controllers = useMemo(
     () =>
       isEditing ? (
         <>
@@ -159,7 +159,7 @@ const Card = ({
         {todoContent}
         <CreatedAt>{createdAt.toLocaleDateString()}</CreatedAt>
       </TitleContainer>
-      <ControlContainer done={completed}>{controlContainer}</ControlContainer>
+      <ControlContainer done={completed}>{controllers}</ControlContainer>
     </Wrapper>
   );
 };
