@@ -99,8 +99,8 @@ const Card = ({
 
   const toggleEdit = useCallback(() => {
     if (newTitle !== title) setNewTitle(title);
-    setIsEditing(!isEditing);
-  }, [isEditing, newTitle, title]);
+    setIsEditing((value) => !value);
+  }, [newTitle, title]);
 
   const submitEditedTitle = useCallback(
     (e?: React.FormEvent<HTMLFormElement>) => {
