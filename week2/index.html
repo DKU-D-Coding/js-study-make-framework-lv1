@@ -10,7 +10,7 @@
     <div className="App">
         <h3>2주차 JavaScript 실습 - 할 일</h3>
         <input type="text" placeholder="새로운 할 일을 입력해주세요!" id="todoInput"/>
-        <button onclick="paintNewTodo(1, '11')">추가</button>
+        <button onclick="appendTodo(1, '11')">추가</button>
         <ul id="todoList-container">
             <li>
                 <input type="checkbox" />
@@ -22,13 +22,11 @@
     </div>
 </body>
 <script>
-    // const todoInputElem = document.querySelector('#todoInput');
-    // const todoListElem = document.querySelector('#todoList');
-
+    // 목록 추가 삭제 수정 토글
     // let todoList = [];
-    // let id = 0;
+    let id = 0;
 
-    const paintNewTodo = (id, text) => {
+    const appendTodo = (id, text) => {
         const newTodoElem = document.createElement("li");
         
         const checkboxElem = document.createElement("input");
@@ -36,13 +34,16 @@
 
         const textElem = document.createElement("span");
         textElem.innerHTML = text;
+        if(!checkboxElem){
+            textElem.innerHTML = "완료되었습니다";
+        }
 
         const updateBtnElem = document.createElement('button');
         //delBtnElem.addEventListener('click', () =>  updateTodo(todo.id))
         updateBtnElem.innerHTML = '수정';
 
         const deleteBtnElem = document.createElement('button');
-        //delBtnElem.addEventListener('click', () =>  deleteTodo(todo.id))
+        deleteBtnElem.addEventListener('click', () =>  newTodoElem.style.display = "none")
         deleteBtnElem.innerHTML = '삭제';
 
         document.getElementById("todoList-container").appendChild(newTodoElem);
@@ -53,12 +54,8 @@
         newTodoElem.appendChild(deleteBtnElem);
     }
 
-    const appendTodo = (text) => {
-        const newId = id++;
-        const newTodos = getAllTodos().concat({id: newId, isCompleted: false, content: text })
-        // const newTodos = [...getAllTodos(), {id: newId, isCompleted: false, content: text }]
-        setTodos(newTodos)
-        paintTodos();
+    const updateTodo = (id) => {
+
     }
 
     
