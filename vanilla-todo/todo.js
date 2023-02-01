@@ -3,6 +3,7 @@ const todoInput = todoForm.querySelector("input");
 const todoList = document.getElementById("todoList");
 
 let todos = [];
+let editing = null;
 
 const deleteTodo = (todoId) => {
   todos.splice(
@@ -14,12 +15,46 @@ const deleteTodo = (todoId) => {
 
 const toggleTodo = (todoId) => {
   const oldTodo = todos.find((value) => value.id === todoId);
+  const newTodo = {
+    ...oldTodo,
+    done: !oldTodo.done,
+  };
   todos.splice(
     todos.findIndex((value) => value.id === todoId),
     1,
-    { ...oldTodo, done: !oldTodo.done }
+    newTodo
   );
   renderTodo();
+};
+
+const editTodo = (event) => {
+  event.preventDefault();
+
+  const newTodo = {
+    ...editing,
+    content: event.target[0].value,
+  };
+
+  todos.splice(
+    todos.findIndex((value) => value.id === editing.id),
+    1,
+    newTodo
+  );
+
+  editing = null;
+
+  renderTodo();
+};
+
+const startEditing = (todo) => {
+  editing = todo;
+
+  const editingTodo = document.getElementById(todo.id);
+  const editForm = editingTodo.querySelector("form");
+  const startEditingButton = editingTodo.querySelector(".startEditingButton");
+
+  editForm.classList.remove("hidden");
+  startEditingButton.classList.add("hidden");
 };
 
 const renderTodo = () => {
@@ -42,12 +77,43 @@ const renderTodo = () => {
     deleteButton.innerText = "삭제";
     deleteButton.addEventListener("click", () => deleteTodo(todo.id));
 
+    const startEditingButton = document.createElement("button");
+    startEditingButton.type = "button";
+    startEditingButton.classList.add("startEditingButton");
+    startEditingButton.innerText = "수정";
+    startEditingButton.addEventListener("click", () => startEditing(todo));
+
+    const editForm = document.createElement("form");
+    const editInput = document.createElement("input");
+    editInput.value = todo.content;
+
+    const submitEditingButton = document.createElement("button");
+    submitEditingButton.type = "submit";
+    submitEditingButton.innerText = "완료";
+
+    editForm.addEventListener("submit", editTodo);
+
+    editForm.appendChild(editInput);
+    editForm.appendChild(submitEditingButton);
+
     todoElement.appendChild(checkboxInput);
     todoElement.appendChild(content);
+    todoElement.appendChild(editForm);
+    todoElement.appendChild(startEditingButton);
     todoElement.appendChild(deleteButton);
 
     if (todo.done) {
-      todoElement.style.textDecorationLine = "line-through";
+      todoElement.classList.add("done");
+    } else {
+      todoElement.classList.remove("done");
+    }
+
+    if (editing && editing.id === todo.id) {
+      editForm.classList.remove("hidden");
+      startEditingButton.classList.add("hidden");
+    } else {
+      editForm.classList.add("hidden");
+      startEditingButton.classList.remove("hidden");
     }
 
     todoList.appendChild(todoElement);
