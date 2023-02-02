@@ -4,11 +4,20 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>To Do Vanilla</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css" />
   </head>
   <body>
-    <h1 id="title">Hello sekai!</h1>
+    <header>
+      <h1>To Do Vanilla!</h1>
+    </header>
+    <main>
+      <form id="todo-form">
+        <h3>Add your To Do</h3>
+        <input type="text" name="todo" id="todo" />
+      </form>
+      <ul id="todo-list"></ul>
+    </main>
     <script type="module" src="/main.js"></script>
   </body>
 </html>
