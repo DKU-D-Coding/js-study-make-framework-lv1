@@ -1,10 +1,9 @@
 ---
 name: Step3
 about: Component 구성하기
-title: '[Step3] <title>'
+title: "[Step3] <title>"
 labels: step3
-assignees: ''
-
+assignees: ""
 ---
 
 <!-- 별도의 링크를 첨부해도 무방합니다 -->
@@ -25,7 +24,6 @@ assignees: ''
 
 ### DIP(Dependency Inversion Principle)
 
-
 ## 다형성, 캡슐화, 추상화, 상속, 인터페이스 등에 대해 조사하기 (각각 5문장 요약)
 
 ### 다형성
@@ -38,15 +36,12 @@ assignees: ''
 
 ### 인터페이스
 
-
 ## MVC Pattern, MVVM Pattern 등에 대해 조사하기 (각각 5문장 요약)
 
 ### MVC
 
 ### MVVM
 
-
 ## ESModule에 대해 조사하기 (5문장 요약)
-
 
 ## 가상돔에 대해 조사하기 (5줄 요약)

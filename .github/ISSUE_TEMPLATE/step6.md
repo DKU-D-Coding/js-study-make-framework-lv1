@@ -1,10 +1,9 @@
 ---
 name: Step6
 about: Router 직접 만들기
-title: '[Step6] <title>'
+title: "[Step6] <title>"
 labels: step6
-assignees: ''
-
+assignees: ""
 ---
 
 <!-- 별도의 링크를 첨부해도 무방합니다 -->

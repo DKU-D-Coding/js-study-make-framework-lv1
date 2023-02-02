@@ -1,10 +1,9 @@
 ---
 name: Step2
 about: Vanilla Javascript로 무작정 TodoList 만들기
-title: '[Step2] <title>'
+title: "[Step2] <title>"
 labels: step2
-assignees: ''
-
+assignees: ""
 ---
 
 <!-- 별도의 링크를 첨부해도 무방합니다 -->
