@@ -24,21 +24,23 @@ export const handleSubmit = (event) => {
  * Handles the click event of the delete button
  * @param {string} index
  */
-export const handleDeleteButtonClick = (index) => {
+export const deleteButtonClick = (index) => {
     deleteItem(index);
 };
 
 /**
  * Handles the click event of the checkbox
+ * @param {string} index
  */
-export const handleCheckboxClick = (index) => {
+export const checkboxClick = (index) => {
     toggleComplete(index);
 };
 
 /**
  * Handles the click event of the edit button
+ * @param {string} index
  */
-export const handleEditButtonClick = (index) => {
+export const editButtonClick = (index) => {
     const newTitle = prompt("수정할 내용을 입력하세요");
     editItem(index, newTitle);
 };

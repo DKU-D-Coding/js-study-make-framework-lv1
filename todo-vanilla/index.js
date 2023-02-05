@@ -1,4 +1,8 @@
 import { renderForm, renderUl } from "./renderers.js";
 
-renderForm();
-renderUl();
+const init = () => {
+    renderForm();
+    renderUl();
+};
+
+init();

@@ -1,7 +1,7 @@
 import {
-    handleCheckboxClick,
-    handleDeleteButtonClick,
-    handleEditButtonClick,
+    checkboxClick,
+    deleteButtonClick,
+    editButtonClick,
     handleSubmit,
 } from "./event-handlers.js";
 
@@ -30,21 +30,25 @@ export const renderForm = () => {
  * Renders Ul
  */
 export const renderUl = () => {
-    const todoUl = document.querySelector("#todo-list");
+    const todoListSection = document.querySelector("#todo-list-section");
+    const todoUl = document.createElement("ul");
+    todoUl.id = "todo-list";
     todoUl.addEventListener("click", ({ target }) => {
         if (target.tagName === "BUTTON") {
             switch (target.role) {
                 case "delete-button":
-                    handleDeleteButtonClick(target.id);
+                    deleteButtonClick(target.id);
                     break;
                 case "edit-button":
-                    handleEditButtonClick(target.id);
+                    editButtonClick(target.id);
                     break;
             }
         } else if (target.type === "checkbox") {
-            handleCheckboxClick(target.id);
+            checkboxClick(target.id);
         }
     });
+
+    todoListSection.appendChild(todoUl);
 };
 
 /**

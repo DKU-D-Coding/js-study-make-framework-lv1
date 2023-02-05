@@ -47,6 +47,8 @@ export const toggleComplete = (index) => {
 
 /**
  * Edits the title of a todo item
+ * @param {string} index
+ * @param {string} newTitle
  */
 export const editItem = (index, newTitle) => {
     const intIndex = parseInt(index);
