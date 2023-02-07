@@ -18,7 +18,7 @@ li{
     margin: 10px 0;
 }
 
-.todoList-wrapper{
+#app{
     width: 60vw;
     height: 80vh;
     padding-top: 5vh;
@@ -34,7 +34,7 @@ li{
     overflow-y: scroll;
 }
 
-.todo-input{
+.append-input{
     width: 200px;
     height: 24px;
     padding: 3px 10px;
@@ -62,7 +62,7 @@ li{
     text-align: center;
 }
 
-.updated{
+input:read-write{
     border: 1px solid #c3c3c3;
     text-align: start;
 }

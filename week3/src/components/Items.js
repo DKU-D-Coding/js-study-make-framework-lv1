@@ -4,34 +4,45 @@ export default class Items extends Component {
     template() {
         const { todoItems } = this.$props;
         return `
-      <ul>
-        ${todoItems
-            .map(
-                ({ contents, active, seq }) => `
-          <li data-seq="${seq}">
-            ${contents}
-            <button class="toggleBtn" style="color: ${
-                active ? "#09F" : "#F09"
-            }">
-              ${active ? "활성" : "비활성"}
-            </button>
-            <button class="deleteBtn">삭제</button>
-          </li>
-        `
-            )
-            .join("")}
-      </ul>
+        <ul>
+            ${todoItems
+                .map(
+                    ({ seq, contents, done, update }) => `
+                    <li data-seq="${seq}">
+
+                        <input type="checkbox" ${
+                            done ? "checked" : ""
+                        } id="toggle-btn" ${update ? "class='updated'" : ""}/>
+
+                        <input type="text" id="title${seq}" ${
+                        done ? "class='todo checked'" : "class='todo'"
+                    } value=${contents} ${update ? "" : "readOnly"} />
+
+                        <button class="btn" id='update-btn'>${
+                            update ? "완료" : "수정"
+                        }</button>
+
+                        <button class="btn deleteBtn" id='delete-btn'>삭제</button>
+                    </li>
+                `
+                )
+                .join("")}
+        </ul>
     `;
     }
 
     setEvent() {
-        const { deleteItem, toggleItem } = this.$props;
+        const { updateItem, deleteItem, toggleItem } = this.$props;
 
-        this.addEvent("click", ".deleteBtn", ({ target }) => {
+        this.addEvent("click", "#update-btn", ({ target }) => {
+            updateItem(Number(target.closest("[data-seq]").dataset.seq));
+        });
+
+        this.addEvent("click", "#delete-btn", ({ target }) => {
             deleteItem(Number(target.closest("[data-seq]").dataset.seq));
         });
 
-        this.addEvent("click", ".toggleBtn", ({ target }) => {
+        this.addEvent("click", "#toggle-btn", ({ target }) => {
             toggleItem(Number(target.closest("[data-seq]").dataset.seq));
         });
     }
