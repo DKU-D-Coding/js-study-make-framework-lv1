@@ -88,15 +88,19 @@ const handleClickStartEditing = (event) => {
   startEditing(findTodo(getTodoElementId($targetTodo)));
 };
 
-const startEditing = (todo) => {
-  editing = todo;
-
-  const editingTodo = document.getElementById(todo.id);
+const paintEditForm = (todoId) => {
+  const editingTodo = document.getElementById(todoId);
   const editForm = editingTodo.querySelector("form");
   const editingButton = editingTodo.querySelector(EDIT_BUTTON_CLASSNAME);
 
   editForm.classList.remove("hidden");
   editingButton.classList.add("hidden");
+};
+
+const startEditing = (todo) => {
+  editing = todo;
+
+  paintEditForm(todo.id);
 };
 
 const addTodo = () => {
