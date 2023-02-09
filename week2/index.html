@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>2주차 JavaScript 실습</title>
+</head>
+<body>
+    <div class="todoList-wrapper">
+        <h2>2주차 JavaScript 실습 - 할 일</h2>
+        <div class="input-container">
+            <input type="text" placeholder="새로운 할 일을 입력해주세요" id="todoInput" class="todo-input"/>
+            <button class="btn append-btn" onclick="addTodo()">추가</button>
+        </div>
+        <ul id="todoList-container">
+        </ul>
+    </div>
+</body>
+<script type="text/javascript">
+    const addTodo = () => {
+        const inputElem = document.getElementById("todoInput");
+        const newTodoText = inputElem.value;
+        inputElem.value = "";
+        
+        const newTodoElem = document.createElement("li");
+        
+        const textElem = todoTitle(newTodoText);
+
+        const checkboxElem = document.createElement("input");
+        checkboxElem.type = "checkbox"
+        handleCheckbox(checkboxElem, textElem);
+
+        document.getElementById("todoList-container").appendChild(newTodoElem);
+        newTodoElem.appendChild(checkboxElem);
+        newTodoElem.appendChild(textElem);
+        newTodoElem.appendChild(updateTodoBtn(textElem));
+        newTodoElem.appendChild(deleteTodoBtn(newTodoElem));
+    }
+
+    const handleCheckbox = (el, textElem) => {
+        el.addEventListener('click', () => {
+            textElem.classList.toggle('checked');
+        });
+    }
+
+    const todoTitle = (newTodoText) => {
+        const textElem = document.createElement("input");
+        textElem.value = newTodoText;
+        textElem.className = "todo";
+        textElem.readOnly = true;
+
+        return textElem;
+    }
+
+    const updateTodoBtn = (textElem) => {
+        const updateBtnElem = document.createElement('button');
+        updateBtnElem.innerText = '수정';
+        updateBtnElem.className = 'btn';
+        updateBtnElem.addEventListener('click', () =>  {
+            if (updateBtnElem.innerText === "수정"){
+                updateBtnElem.innerText = '완료';
+                textElem.readOnly = false;
+                textElem.focus();
+            } else {
+                updateBtnElem.innerText = '수정';
+                textElem.readOnly = true;
+            }
+
+            textElem.classList.toggle('updated');
+        })
+
+        return updateBtnElem;
+    }
+
+    const deleteTodoBtn = (newTodoElem) => {
+        const deleteBtnElem = document.createElement('button');
+        deleteBtnElem.addEventListener('click', () =>  newTodoElem.style.display = "none");
+        deleteBtnElem.className = 'btn';
+        deleteBtnElem.innerHTML = '삭제';
+
+        return deleteBtnElem;
+    }
+
+</script>
+</html>
