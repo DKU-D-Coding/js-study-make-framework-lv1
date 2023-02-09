@@ -1,13 +1,13 @@
-import Component from "./Component.js";
-
-export default class App extends Component {
+export default class TodoList extends Component {
   init() {
-    this.state = {
+    this.setState({
       todos: [],
-    };
-    this.html = todos
-      .map(
-        ({ id, content, done }) => `
+      editing: null,
+    });
+    this.setHtml(
+      this.state.todos
+        .map(
+          ({ id, content, done }) => `
     <li id="${id}" ${done ? 'class="done"' : ""}>
     <label>
       <input type="checkbox" ${
@@ -21,17 +21,18 @@ export default class App extends Component {
           : `class="${EDIT_FORM_CLASSNAME} hidden"`
       }>
         <input value="${content}">
-        <button type="submit">완료</button>
+        <button type="submit">Submit</button>
       </form>
       <button type="button" ${
         editing && editing.id === id
           ? `class="${EDIT_BUTTON_CLASSNAME} hidden"`
           : `class="${EDIT_BUTTON_CLASSNAME}"`
-      }>수정</button>
-      <button type="button" class="${DELETE_BUTTON_CLASSNAME}">삭제</button>
+      }>Edit</button>
+      <button type="button" class="${DELETE_BUTTON_CLASSNAME}">Delete</button>
     </li>
   `
-      )
-      .join("");
+        )
+        .join("")
+    );
   }
 }
