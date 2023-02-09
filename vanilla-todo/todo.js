@@ -1,6 +1,12 @@
-const todoForm = document.getElementById("todoForm");
-const todoInput = todoForm.querySelector("input");
-const todoList = document.getElementById("todoList");
+const ADD_FORM_ID = "addForm";
+const EDIT_FORM_CLASSNAME = "editForm";
+const EDIT_BUTTON_CLASSNAME = "editing";
+const TOGGLE_CLASSNAME = "toggle";
+const DELETE_BUTTON_CLASSNAME = "delete";
+
+const $addForm = document.getElementById(ADD_FORM_ID);
+const $todoInput = $addForm.querySelector("input");
+const $todoList = document.getElementById("todoList");
 
 let todos = [];
 let editing = null;
@@ -15,14 +21,37 @@ const findTodoIndex = (todoId) => {
   return todoIndex;
 };
 
+const getTodoElementId = (todoElement) => {
+  return Number(todoElement.id);
+};
+
+const handleClickDelete = (event) => {
+  const {
+    target: { parentNode: $targetTodo },
+  } = event;
+
+  deleteTodo(getTodoElementId($targetTodo));
+};
+
 const deleteTodo = (todoId) => {
   todos.splice(findTodoIndex(todoId), 1);
   renderTodo();
 };
 
+const handleChangeToggle = (event) => {
+  const {
+    target: { parentNode: $labelElement },
+  } = event;
+
+  const $targetTodo = $labelElement.parentNode;
+
+  toggleTodo(getTodoElementId($targetTodo));
+};
+
 const toggleTodo = (todoId) => {
   const todoIndex = findTodoIndex(todoId);
-  const oldTodo = todos[todoIndex];
+  const oldTodo = findTodo(todoId);
+  console.log(todoIndex, oldTodo);
   const newTodo = {
     ...oldTodo,
     done: !oldTodo.done,
@@ -51,87 +80,34 @@ const handleSubmitEditing = (event) => {
   editTodo(content);
 };
 
+const handleClickStartEditing = (event) => {
+  const {
+    target: { parentNode: $targetTodo },
+  } = event;
+
+  startEditing(findTodo(getTodoElementId($targetTodo)));
+};
+
 const startEditing = (todo) => {
   editing = todo;
 
   const editingTodo = document.getElementById(todo.id);
   const editForm = editingTodo.querySelector("form");
-  const startEditingButton = editingTodo.querySelector(".startEditingButton");
+  const editingButton = editingTodo.querySelector(EDIT_BUTTON_CLASSNAME);
 
   editForm.classList.remove("hidden");
-  startEditingButton.classList.add("hidden");
-};
-
-const renderTodo = () => {
-  todoList.innerHTML = "";
-
-  todos.forEach((todo) => {
-    const todoElement = document.createElement("li");
-    todoElement.id = todo.id;
-
-    const checkboxInput = document.createElement("input");
-    checkboxInput.type = "checkbox";
-    checkboxInput.checked = todo.done;
-    checkboxInput.addEventListener("change", () => toggleTodo(todo.id));
-
-    const content = document.createElement("span");
-    content.innerText = todo.content;
-
-    const deleteButton = document.createElement("button");
-    deleteButton.type = "button";
-    deleteButton.innerText = "삭제";
-    deleteButton.addEventListener("click", () => deleteTodo(todo.id));
-
-    const startEditingButton = document.createElement("button");
-    startEditingButton.type = "button";
-    startEditingButton.classList.add("startEditingButton");
-    startEditingButton.innerText = "수정";
-    startEditingButton.addEventListener("click", () => startEditing(todo));
-
-    const editForm = document.createElement("form");
-    const editInput = document.createElement("input");
-    editInput.value = todo.content;
-
-    const submitEditingButton = document.createElement("button");
-    submitEditingButton.type = "submit";
-    submitEditingButton.innerText = "완료";
-
-    editForm.addEventListener("submit", handleSubmitEditing);
-
-    editForm.appendChild(editInput);
-    editForm.appendChild(submitEditingButton);
-
-    todoElement.appendChild(checkboxInput);
-    todoElement.appendChild(content);
-    todoElement.appendChild(editForm);
-    todoElement.appendChild(startEditingButton);
-    todoElement.appendChild(deleteButton);
-
-    if (todo.done) {
-      todoElement.classList.add("done");
-    } else {
-      todoElement.classList.remove("done");
-    }
-
-    if (editing && editing.id === todo.id) {
-      editForm.classList.remove("hidden");
-      startEditingButton.classList.add("hidden");
-    } else {
-      editForm.classList.add("hidden");
-      startEditingButton.classList.remove("hidden");
-    }
-
-    todoList.appendChild(todoElement);
-  });
+  editingButton.classList.add("hidden");
 };
 
 const addTodo = () => {
+  editing = null;
+
   const newTodo = {
-    content: todoInput.value,
+    content: $todoInput.value,
     id: Date.now(),
     done: false,
   };
-  todoInput.value = "";
+  $todoInput.value = "";
 
   todos.push(newTodo);
   renderTodo();
@@ -143,4 +119,48 @@ const handleSubmitAdding = (event) => {
   addTodo();
 };
 
-todoForm.addEventListener("submit", handleSubmitAdding);
+const addEvent = (eventType, targetSelector, callback) => {
+  document.body.addEventListener(eventType, (event) => {
+    if (!event.target.closest(targetSelector)) {
+      return;
+    }
+    callback(event);
+  });
+};
+
+addEvent("submit", `#${ADD_FORM_ID}`, handleSubmitAdding);
+addEvent("submit", `.${EDIT_FORM_CLASSNAME}`, handleSubmitEditing);
+addEvent("click", `.${EDIT_BUTTON_CLASSNAME}`, handleClickStartEditing);
+addEvent("click", `.${DELETE_BUTTON_CLASSNAME}`, handleClickDelete);
+addEvent("change", `.${TOGGLE_CLASSNAME}`, handleChangeToggle);
+
+const renderTodo = () => {
+  $todoList.innerHTML = todos
+    .map(
+      ({ id, content, done }) => `
+    <li id="${id}" ${done ? 'class="done"' : ""}>
+    <label>
+      <input type="checkbox" ${
+        done ? "checked" : ""
+      }  class="${TOGGLE_CLASSNAME}">
+      <span>${content}</span>
+    </label>
+      <form ${
+        editing && editing.id === id
+          ? `class="${EDIT_FORM_CLASSNAME}`
+          : `class="${EDIT_FORM_CLASSNAME} hidden"`
+      }>
+        <input value="${content}">
+        <button type="submit">완료</button>
+      </form>
+      <button type="button" ${
+        editing && editing.id === id
+          ? `class="${EDIT_BUTTON_CLASSNAME} hidden"`
+          : `class="${EDIT_BUTTON_CLASSNAME}"`
+      }>수정</button>
+      <button type="button" class="${DELETE_BUTTON_CLASSNAME}">삭제</button>
+    </li>
+  `
+    )
+    .join("");
+};
