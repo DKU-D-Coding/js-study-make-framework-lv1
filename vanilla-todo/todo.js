@@ -5,45 +5,50 @@ const todoList = document.getElementById("todoList");
 let todos = [];
 let editing = null;
 
+const findTodo = (todoId) => {
+  const todo = todos.find((value) => value.id === todoId);
+  return todo;
+};
+
+const findTodoIndex = (todoId) => {
+  const todoIndex = todos.findIndex((value) => value.id === todoId);
+  return todoIndex;
+};
+
 const deleteTodo = (todoId) => {
-  todos.splice(
-    todos.findIndex((value) => value.id === todoId),
-    1
-  );
+  todos.splice(findTodoIndex(todoId), 1);
   renderTodo();
 };
 
 const toggleTodo = (todoId) => {
-  const oldTodo = todos.find((value) => value.id === todoId);
+  const todoIndex = findTodoIndex(todoId);
+  const oldTodo = todos[todoIndex];
   const newTodo = {
     ...oldTodo,
     done: !oldTodo.done,
   };
-  todos.splice(
-    todos.findIndex((value) => value.id === todoId),
-    1,
-    newTodo
-  );
+  todos.splice(todoIndex, 1, newTodo);
   renderTodo();
 };
 
-const editTodo = (event) => {
-  event.preventDefault();
-
+const editTodo = (content) => {
   const newTodo = {
     ...editing,
-    content: event.target[0].value,
+    content,
   };
 
-  todos.splice(
-    todos.findIndex((value) => value.id === editing.id),
-    1,
-    newTodo
-  );
+  todos.splice(findTodoIndex(editing.id), 1, newTodo);
 
   editing = null;
 
   renderTodo();
+};
+
+const handleSubmitEditing = (event) => {
+  event.preventDefault();
+
+  const content = event.target[0].value;
+  editTodo(content);
 };
 
 const startEditing = (todo) => {
@@ -91,7 +96,7 @@ const renderTodo = () => {
     submitEditingButton.type = "submit";
     submitEditingButton.innerText = "완료";
 
-    editForm.addEventListener("submit", editTodo);
+    editForm.addEventListener("submit", handleSubmitEditing);
 
     editForm.appendChild(editInput);
     editForm.appendChild(submitEditingButton);
@@ -120,9 +125,7 @@ const renderTodo = () => {
   });
 };
 
-const addTodo = (event) => {
-  event.preventDefault();
-
+const addTodo = () => {
   const newTodo = {
     content: todoInput.value,
     id: Date.now(),
@@ -134,4 +137,10 @@ const addTodo = (event) => {
   renderTodo();
 };
 
-todoForm.addEventListener("submit", addTodo);
+const handleSubmitAdding = (event) => {
+  event.preventDefault();
+
+  addTodo();
+};
+
+todoForm.addEventListener("submit", handleSubmitAdding);
