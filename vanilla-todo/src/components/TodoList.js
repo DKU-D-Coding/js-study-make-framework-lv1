@@ -1,3 +1,5 @@
+import Component from "../Component.js";
+
 export default class TodoList extends Component {
   init() {
     this.setState({

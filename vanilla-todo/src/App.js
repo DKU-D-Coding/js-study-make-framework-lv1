@@ -1,4 +1,5 @@
-import Component from "../src/Component.js";
+import Component from "./Component.js";
+
 import Title from "./components/Title.js";
 import AddForm from "./components/AddForm.js";
 import TodoList from "./components/TodoList.js";

@@ -1,3 +1,4 @@
+import Component from "../Component.js";
 export default class Title extends Component {
   init() {
     this.setHtml(`
