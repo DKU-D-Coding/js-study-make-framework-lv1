@@ -2,38 +2,35 @@ export default class Component {
   $root;
   #children;
   #state;
-  #html;
   constructor($root, children) {
     this.$root = $root;
     this.#children = children;
     this.init();
     this.render();
+    this.setEvent();
   }
-  init() {
-    this.setHtml();
-  }
+  init() {}
   get state() {
     return this.#state;
   }
   setState(newState) {
     this.#state = { ...this.#state, ...newState };
   }
-  setHtml(html) {
+  html() {
+    return `<div></div>`;
+  }
+  template() {
     if (this.#children) {
       const childNodes = this.#children
         .map((child) => `<div id="${child}"></div>`)
         .join("");
 
-      if (this.#html) {
-        this.#html = html + childNodes;
-        return;
-      }
-      this.#html = childNodes;
-      return;
+      return this.html() + childNodes;
     }
-    if (html) {
-      this.#html = html;
-    }
+    return this.html();
+  }
+  render() {
+    this.$root.innerHTML = this.template();
   }
   setEvent() {}
   addEvent(eventType, targetSelector, callback) {
@@ -43,10 +40,5 @@ export default class Component {
       }
       callback(event);
     });
-  }
-  render() {
-    if (this.#html) {
-      this.$root.innerHTML = this.#html;
-    }
   }
 }

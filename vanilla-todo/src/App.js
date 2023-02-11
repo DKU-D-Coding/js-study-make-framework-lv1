@@ -8,6 +8,6 @@ class App extends Component {}
 
 new App(document.querySelector("#App"), ["Title", "AddForm", "TodoList"]);
 
-new Title(document.querySelector("#Title"));
-new AddForm(document.querySelector("#AddForm"));
-new TodoList(document.querySelector("#TodoList"));
+export const title = new Title(document.querySelector("#Title"));
+export const addForm = new AddForm(document.querySelector("#AddForm"));
+export const todoList = new TodoList(document.querySelector("#TodoList"));
