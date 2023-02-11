@@ -21,7 +21,7 @@ export default class TodoList extends Component {
     </label>
       <form ${
         this.state.editing && this.state.editing.id === id
-          ? `class="${Selector.EDIT_FORM_CLASSNAME}`
+          ? `class="${Selector.EDIT_FORM_CLASSNAME}"`
           : `class="${Selector.EDIT_FORM_CLASSNAME} hidden"`
       }>
         <input value="${content}">
@@ -126,21 +126,9 @@ export default class TodoList extends Component {
       startEditing(findTodo(getTodoElementId($targetTodo)));
     };
 
-    const paintEditForm = (todoId) => {
-      const $editingTodo = document.getElementById(todoId);
-      const $editForm = $editingTodo.querySelector("form");
-      const $editingButton = $editingTodo.querySelector(
-        Selector.EDIT_BUTTON_CLASSNAME
-      );
-
-      $editForm.classList.remove("hidden");
-      $editingButton.classList.add("hidden");
-    };
-
     const startEditing = (todo) => {
       this.setState({ editing: todo });
-
-      paintEditForm(todo.id);
+      this.render();
     };
     this.addEvent(
       "submit",

@@ -14,8 +14,9 @@ class App extends Component {
   }
 }
 
-new App(document.querySelector("#App"));
+const $app = document.querySelector("#App");
+new App($app);
 
-export const title = new Title(document.querySelector("#Title"));
-export const addForm = new AddForm(document.querySelector("#AddForm"));
-export const todoList = new TodoList(document.querySelector("#TodoList"));
+export const title = new Title($app.querySelector("#Title"));
+export const addForm = new AddForm($app.querySelector("#AddForm"));
+export const todoList = new TodoList($app.querySelector("#TodoList"));
