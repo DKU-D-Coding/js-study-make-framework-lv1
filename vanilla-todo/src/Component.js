@@ -5,11 +5,13 @@ export default class Component {
   constructor($root, children) {
     this.$root = $root;
     this.#children = children;
-    this.init();
+    this.setState(this.initState());
     this.render();
     this.setEvent();
   }
-  init() {}
+  initState() {
+    return {};
+  }
   get state() {
     return this.#state;
   }
