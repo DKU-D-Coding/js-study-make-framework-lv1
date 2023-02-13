@@ -70,7 +70,6 @@ export default class TodoList extends Component {
       this.setState({
         todos: this.state.todos.filter((value) => value.id !== todoId),
       });
-      this.render();
     };
 
     const handleChangeToggle = (event) => {
@@ -94,7 +93,6 @@ export default class TodoList extends Component {
       const oldTodos = [...this.state.todos];
       oldTodos.splice(todoIndex, 1, newTodo);
       this.setState({ todos: oldTodos });
-      this.render();
     };
 
     const editTodo = (content) => {
@@ -107,8 +105,6 @@ export default class TodoList extends Component {
       newTodos.splice(findTodoIndex(this.state.editing.id), 1, newTodo);
 
       this.setState({ editing: null, todos: newTodos });
-
-      this.render();
     };
 
     const handleSubmitEditing = (event) => {
@@ -128,7 +124,6 @@ export default class TodoList extends Component {
 
     const startEditing = (todo) => {
       this.setState({ editing: todo });
-      this.render();
     };
     this.addEvent(
       "submit",
