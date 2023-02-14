@@ -10,8 +10,8 @@ export default class Component {
     this.#state = observable(this.initState());
     observe(() => {
       this.render();
-      this.setEvent();
       this.declare();
+      this.setEvent();
     });
   }
   initState() {
