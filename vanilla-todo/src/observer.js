@@ -12,12 +12,25 @@ const batch = (callback, limit = MILLI_PER_FRAME) => {
   };
 };
 
-let observers = [];
+let currentObserver = null;
+
+const observe = (observer) => {
+  currentObserver = observer;
+  observer();
+  currentObserver = null;
+};
 
 const observable = (props) => {
+  let observers = new Set();
   const state = new Proxy(
     { ...props },
     {
+      get(target, prop) {
+        if (currentObserver) {
+          observers.add(batch(currentObserver));
+        }
+        return target[prop];
+      },
       set(obj, prop, value) {
         obj[prop] = value;
         observers.forEach((observer) => observer());
@@ -29,29 +42,4 @@ const observable = (props) => {
   return state;
 };
 
-const observe = (observer) => {
-  observers.push(batch(observer));
-};
-
-const state = observable({
-  a: 1,
-  b: 2,
-});
-
-observe(() => console.log(state.a, state.b));
-
-const requestAnimationFrame = (callback, delay = MILLI_PER_FRAME) => {
-  setTimeout(() => {
-    callback();
-  }, delay);
-};
-
-const main = () => {
-  state.a = 2;
-  state.b = 3;
-  requestAnimationFrame(() => {
-    state.a = 10;
-  });
-};
-
-main();
+export { observable, observe };

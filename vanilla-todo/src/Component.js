@@ -1,11 +1,18 @@
+import { observable, observe } from "./observer.js";
+
 export default class Component {
   $root;
   #state;
-  constructor($root) {
+  #props;
+  constructor($root, props) {
     this.$root = $root;
-    this.setState(this.initState());
-    this.render();
-    this.setEvent();
+    this.#props = props;
+    this.#state = observable(this.initState());
+    observe(() => {
+      this.render();
+      this.setEvent();
+      this.declare();
+    });
   }
   initState() {
     return {};
@@ -13,9 +20,14 @@ export default class Component {
   get state() {
     return this.#state;
   }
+  get props() {
+    return this.#props;
+  }
   setState(newState) {
-    this.#state = { ...this.#state, ...newState };
-    this.render();
+    for (const [key, value] of Object.entries(newState)) {
+      if (this.#state[key] === undefined) continue;
+      this.#state[key] = value;
+    }
   }
   html() {
     return `<div></div>`;
@@ -32,4 +44,5 @@ export default class Component {
       callback(event);
     });
   }
+  declare() {}
 }

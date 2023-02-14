@@ -9,7 +9,7 @@ export default class TodoList extends Component {
     };
   }
   html() {
-    return this.state.todos
+    return this.props.state.todos
       .map(
         ({ id, content, done }) => `
     <li id="${id}" ${done ? 'class="done"' : ""}>
@@ -20,7 +20,7 @@ export default class TodoList extends Component {
       <span>${content}</span>
     </label>
       <form ${
-        this.state.editing && this.state.editing.id === id
+        this.props.state.editing && this.props.state.editing.id === id
           ? `class="${Selector.EDIT_FORM_CLASSNAME}"`
           : `class="${Selector.EDIT_FORM_CLASSNAME} hidden"`
       }>
@@ -28,7 +28,7 @@ export default class TodoList extends Component {
         <button type="submit">Submit</button>
       </form>
       <button type="button" ${
-        this.state.editing && this.state.editing.id === id
+        this.props.state.editing && this.props.state.editing.id === id
           ? `class="${Selector.EDIT_BUTTON_CLASSNAME} hidden"`
           : `class="${Selector.EDIT_BUTTON_CLASSNAME}"`
       }>Edit</button>
@@ -43,12 +43,12 @@ export default class TodoList extends Component {
 
   setEvent() {
     const findTodo = (todoId) => {
-      const todo = this.state.todos.find((value) => value.id === todoId);
+      const todo = this.props.state.todos.find((value) => value.id === todoId);
       return todo;
     };
 
     const findTodoIndex = (todoId) => {
-      const todoIndex = this.state.todos.findIndex(
+      const todoIndex = this.props.state.todos.findIndex(
         (value) => value.id === todoId
       );
       return todoIndex;
@@ -67,8 +67,8 @@ export default class TodoList extends Component {
     };
 
     const deleteTodo = (todoId) => {
-      this.setState({
-        todos: this.state.todos.filter((value) => value.id !== todoId),
+      this.props.setState({
+        todos: this.props.state.todos.filter((value) => value.id !== todoId),
       });
     };
 
@@ -90,21 +90,21 @@ export default class TodoList extends Component {
         done: !oldTodo.done,
       };
 
-      const oldTodos = [...this.state.todos];
+      const oldTodos = [...this.props.state.todos];
       oldTodos.splice(todoIndex, 1, newTodo);
-      this.setState({ todos: oldTodos });
+      this.props.setState({ todos: oldTodos });
     };
 
     const editTodo = (content) => {
       const newTodo = {
-        ...this.state.editing,
+        ...this.props.state.editing,
         content,
       };
 
-      const newTodos = [...this.state.todos];
-      newTodos.splice(findTodoIndex(this.state.editing.id), 1, newTodo);
+      const newTodos = [...this.props.state.todos];
+      newTodos.splice(findTodoIndex(this.props.state.editing.id), 1, newTodo);
 
-      this.setState({ editing: null, todos: newTodos });
+      this.props.setState({ editing: null, todos: newTodos });
     };
 
     const handleSubmitEditing = (event) => {
@@ -123,7 +123,7 @@ export default class TodoList extends Component {
     };
 
     const startEditing = (todo) => {
-      this.setState({ editing: todo });
+      this.props.setState({ editing: todo });
     };
     this.addEvent(
       "submit",
