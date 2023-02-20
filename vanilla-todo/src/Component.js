@@ -10,18 +10,30 @@ export default class Component {
     this.#state = observable(this.initState());
     observe(() => {
       this.render();
-      this.declare();
       this.setEvent();
+      this.declare();
     });
   }
   initState() {
     return {};
   }
+  deepCopy(obj) {
+    var clone = {};
+    for (var key in obj) {
+      if (typeof obj[key] == "object" && obj[key] != null) {
+        clone[key] = this.deepCopy(obj[key]);
+      } else {
+        clone[key] = obj[key];
+      }
+    }
+
+    return clone;
+  }
   get state() {
-    return this.#state;
+    return this.deepCopy(this.#state);
   }
   get props() {
-    return this.#props;
+    return this.deepCopy(this.#props);
   }
   setState(newState) {
     for (const [key, value] of Object.entries(newState)) {
@@ -29,19 +41,27 @@ export default class Component {
       this.#state[key] = value;
     }
   }
-  html() {
-    return `<div></div>`;
-  }
+  html() {}
   render() {
     this.$root.innerHTML = this.html();
   }
-  setEvent() {}
+  event() {}
   addEvent(eventType, targetSelector, callback) {
-    document.body.addEventListener(eventType, (event) => {
+    const listener = (event) => {
       if (!event.target.closest(targetSelector)) {
         return;
       }
       callback(event);
+    };
+    this.$root.addEventListener(eventType, listener);
+  }
+  setEvent() {
+    const events = this.event();
+    if (!events) {
+      return;
+    }
+    events.forEach((event) => {
+      this.addEvent(event.type, event.target, event.handler);
     });
   }
   declare() {}
