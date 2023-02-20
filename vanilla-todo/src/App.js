@@ -1,5 +1,4 @@
 import Component from "./Component.js";
-
 import Title from "./components/Title.js";
 import AddForm from "./components/AddForm.js";
 import TodoList from "./components/TodoList.js";
@@ -13,14 +12,14 @@ class App extends Component {
   }
   html() {
     return `
-      <header id="Title"></header>
+      <header id="Title">${Title()}</header>
       <div id="AddForm"></div>
       <ul id="TodoList"></ul>
     `;
   }
   declare() {
     const { todos, editing } = this.state;
-    new Title($app.querySelector("#Title"));
+
     new AddForm($app.querySelector("#AddForm"), {
       addTodo: this.addTodo.bind(this),
     });
