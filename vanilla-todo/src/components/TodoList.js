@@ -1,5 +1,5 @@
 import Component from "../Component.js";
-import { SELECTOR } from "../constants/Selector.js";
+import { SELECTOR, CONTAINER } from "../constants/_index.js";
 import EditForm from "./EditForm.js";
 
 export default class TodoList extends Component {
@@ -14,7 +14,7 @@ export default class TodoList extends Component {
         }">
         <span>${content}</span>
       </label>
-      <div id="EditForm-${id}"></div>
+      <div id="${CONTAINER.EDIT_FORM}-${id}"></div>
       <button type="button" class="${SELECTOR.EDIT_BUTTON_CLASSNAME} ${
           this.props.editing && this.props.editing.id === id ? "hidden" : ""
         }">Edit</button>

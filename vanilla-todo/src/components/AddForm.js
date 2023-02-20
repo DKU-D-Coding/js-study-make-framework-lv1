@@ -1,9 +1,9 @@
 import Component from "../Component.js";
-import { SELECTOR } from "../constants/Selector.js";
+import { SELECTOR } from "../constants/_index.js";
 export default class AddForm extends Component {
   html() {
     return `
-        <form id="addForm">
+        <form id="${SELECTOR.ADD_FORM_ID}">
             <input placeholder="Enter Todo..." />
             <button type="submit">Submit</button>
         </form>`;

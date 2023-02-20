@@ -2,6 +2,7 @@ import Component from "./Component.js";
 import Title from "./components/Title.js";
 import AddForm from "./components/AddForm.js";
 import TodoList from "./components/TodoList.js";
+import { CONTAINER } from "./constants/_index.js";
 
 class App extends Component {
   initState() {
@@ -12,9 +13,9 @@ class App extends Component {
   }
   html() {
     return `
-      <header id="Title">${Title()}</header>
-      <div id="AddForm"></div>
-      <ul id="TodoList"></ul>
+      <header id="${CONTAINER.TITLE}">${Title()}</header>
+      <div id="${CONTAINER.ADD_FORM}"></div>
+      <ul id="${CONTAINER.TODO_LIST}"></ul>
     `;
   }
   declare() {
