@@ -7,14 +7,14 @@ export default class TodoList extends Component {
     return this.props.todos
       .map(
         ({ id, content, done }) => `
-    <li id="${id}" ${done ? 'class="done"' : ""}>
-    <label>
-      <input type="checkbox" ${done ? "checked" : ""}  class="${
+    <li id="${id}" class="todoItem ${done ? "done" : ""}">
+      <label>
+        <input type="checkbox" ${done ? "checked" : ""} class="${
           SELECTOR.TOGGLE_CLASSNAME
         }">
-      <span>${content}</span>
-    </label>
- <div id="EditForm-${id}"></div>
+        <span>${content}</span>
+      </label>
+      <div id="EditForm-${id}"></div>
       <button type="button" class="${SELECTOR.EDIT_BUTTON_CLASSNAME} ${
           this.props.editing && this.props.editing.id === id ? "hidden" : ""
         }">Edit</button>
@@ -55,33 +55,23 @@ export default class TodoList extends Component {
     ];
   }
 
-  getTodoElementId(todoElement) {
-    return Number(todoElement.id);
+  getTodoIdFrom($targetElement) {
+    const $todoElement = $targetElement.closest(".todoItem");
+    return Number($todoElement.id);
   }
 
   handleClickStartEditing(event) {
-    const {
-      target: { parentNode: $targetTodo },
-    } = event;
-
-    this.props.startEditing(getTodoElementId($targetTodo));
+    const { target } = event;
+    this.props.startEditing(this.getTodoIdFrom(target));
   }
 
   handleClickDelete(event) {
-    const {
-      target: { parentNode: $targetTodo },
-    } = event;
-
-    this.props.deleteTodo(getTodoElementId($targetTodo));
+    const { target } = event;
+    this.props.deleteTodo(this.getTodoIdFrom(target));
   }
 
   handleChangeToggle(event) {
-    const {
-      target: { parentNode: $labelElement },
-    } = event;
-
-    const $targetTodo = $labelElement.parentNode;
-
-    this.props.toggleTodo(getTodoElementId($targetTodo));
+    const { target } = event;
+    this.props.toggleTodo(this.getTodoIdFrom(target));
   }
 }
