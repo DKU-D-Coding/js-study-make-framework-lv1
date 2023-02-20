@@ -37,7 +37,7 @@ export default class Component {
   }
   setState(newState) {
     for (const [key, value] of Object.entries(newState)) {
-      if (this.#state[key] === undefined) continue;
+      if (this.#state.hasOwnProperty(key)) continue;
       this.#state[key] = value;
     }
   }
