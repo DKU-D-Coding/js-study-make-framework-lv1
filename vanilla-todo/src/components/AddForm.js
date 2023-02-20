@@ -9,16 +9,6 @@ export default class AddForm extends Component {
         </form>`;
   }
   event() {
-    const handleSubmitAdding = (event) => {
-      event.preventDefault();
-
-      const $addForm = document.getElementById(SELECTOR.ADD_FORM_ID);
-      const $todoInput = $addForm.querySelector("input");
-
-      this.props.addTodo($todoInput.value);
-
-      $todoInput.value = "";
-    };
     return [
       {
         type: "submit",
@@ -26,5 +16,16 @@ export default class AddForm extends Component {
         handler: handleSubmitAdding,
       },
     ];
+  }
+
+  handleSubmitAdding(event) {
+    event.preventDefault();
+
+    const $addForm = document.getElementById(SELECTOR.ADD_FORM_ID);
+    const $todoInput = $addForm.querySelector("input");
+
+    this.props.addTodo($todoInput.value);
+
+    $todoInput.value = "";
   }
 }

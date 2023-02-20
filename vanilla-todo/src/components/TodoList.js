@@ -32,66 +32,64 @@ export default class TodoList extends Component {
   }
 
   event() {
-    const { deleteTodo, toggleTodo, editTodo, startEditing } = this.props;
-
-    const getTodoElementId = (todoElement) => {
-      return Number(todoElement.id);
-    };
-
-    const handleSubmitEditing = (event) => {
-      event.preventDefault();
-
-      const content = event.target[0].value;
-      editTodo(content);
-    };
-
-    const handleClickStartEditing = (event) => {
-      const {
-        target: { parentNode: $targetTodo },
-      } = event;
-
-      startEditing(getTodoElementId($targetTodo));
-    };
-
-    const handleClickDelete = (event) => {
-      const {
-        target: { parentNode: $targetTodo },
-      } = event;
-
-      deleteTodo(getTodoElementId($targetTodo));
-    };
-
-    const handleChangeToggle = (event) => {
-      const {
-        target: { parentNode: $labelElement },
-      } = event;
-
-      const $targetTodo = $labelElement.parentNode;
-
-      toggleTodo(getTodoElementId($targetTodo));
-    };
-
     return [
       {
         type: "submit",
         target: `.${SELECTOR.EDIT_FORM_CLASSNAME}`,
-        handler: handleSubmitEditing,
+        handler: this.handleSubmitEditing,
       },
       {
         type: "click",
         target: `.${SELECTOR.EDIT_BUTTON_CLASSNAME}`,
-        handler: handleClickStartEditing,
+        handler: this.handleClickStartEditing,
       },
       {
         type: "click",
         target: `.${SELECTOR.DELETE_BUTTON_CLASSNAME}`,
-        handler: handleClickDelete,
+        handler: this.handleClickDelete,
       },
       {
         type: "change",
         target: `.${SELECTOR.TOGGLE_CLASSNAME}`,
-        handler: handleChangeToggle,
+        handler: this.handleChangeToggle,
       },
     ];
+  }
+
+  getTodoElementId(todoElement) {
+    return Number(todoElement.id);
+  }
+
+  handleSubmitEditing(event) {
+    event.preventDefault();
+
+    const content = event.target[0].value;
+    this.props.editTodo(content);
+  }
+
+  handleClickStartEditing(event) {
+    const {
+      target: { parentNode: $targetTodo },
+    } = event;
+
+    this.props.startEditing(getTodoElementId($targetTodo));
+  }
+
+  handleClickDelete(event) {
+    const {
+      target: { parentNode: $targetTodo },
+    } = event;
+
+    this.props.deleteTodo(getTodoElementId($targetTodo));
+  }
+
+  handleChangeToggle(event) {
+    const {
+      target: { parentNode: $labelElement },
+    } = event;
+
+    const $targetTodo = $labelElement.parentNode;
+
+    this.props.toggleTodo(getTodoElementId($targetTodo));
   }
 }
