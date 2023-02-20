@@ -1,5 +1,6 @@
 import Component from "../Component.js";
 import { SELECTOR } from "../constants/Selector.js";
+import EditForm from "./EditForm.js";
 
 export default class TodoList extends Component {
   html() {
@@ -13,12 +14,7 @@ export default class TodoList extends Component {
         }">
       <span>${content}</span>
     </label>
-      <form class="${SELECTOR.EDIT_FORM_CLASSNAME} ${
-          this.props.editing && this.props.editing.id === id ? "" : "hidden"
-        }">
-        <input value="${content}">
-        <button type="submit">Submit</button>
-      </form>
+ <div id="EditForm-${id}"></div>
       <button type="button" class="${SELECTOR.EDIT_BUTTON_CLASSNAME} ${
           this.props.editing && this.props.editing.id === id ? "hidden" : ""
         }">Edit</button>
@@ -31,13 +27,16 @@ export default class TodoList extends Component {
       .join("");
   }
 
+  declare() {
+    const { editing, editTodo } = this.props;
+    new EditForm($app.querySelector("#EditForm"), {
+      editing,
+      editTodo: editTodo.bind(this),
+    });
+  }
+
   event() {
     return [
-      {
-        type: "submit",
-        target: `.${SELECTOR.EDIT_FORM_CLASSNAME}`,
-        handler: this.handleSubmitEditing,
-      },
       {
         type: "click",
         target: `.${SELECTOR.EDIT_BUTTON_CLASSNAME}`,
@@ -58,13 +57,6 @@ export default class TodoList extends Component {
 
   getTodoElementId(todoElement) {
     return Number(todoElement.id);
-  }
-
-  handleSubmitEditing(event) {
-    event.preventDefault();
-
-    const content = event.target[0].value;
-    this.props.editTodo(content);
   }
 
   handleClickStartEditing(event) {
