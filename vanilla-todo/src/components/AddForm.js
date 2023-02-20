@@ -1,5 +1,5 @@
 import Component from "../Component.js";
-import Selector from "../constants/Selector.js";
+import { SELECTOR } from "../constants/Selector.js";
 export default class AddForm extends Component {
   html() {
     return `
@@ -8,17 +8,23 @@ export default class AddForm extends Component {
             <button type="submit">Submit</button>
         </form>`;
   }
-  setEvent() {
+  event() {
     const handleSubmitAdding = (event) => {
       event.preventDefault();
 
-      const $addForm = document.getElementById(Selector.ADD_FORM_ID);
+      const $addForm = document.getElementById(SELECTOR.ADD_FORM_ID);
       const $todoInput = $addForm.querySelector("input");
 
       this.props.addTodo($todoInput.value);
 
       $todoInput.value = "";
     };
-    this.addEvent("submit", `#${Selector.ADD_FORM_ID}`, handleSubmitAdding);
+    return [
+      {
+        type: "submit",
+        target: `#${SELECTOR.ADD_FORM_ID}`,
+        handler: handleSubmitAdding,
+      },
+    ];
   }
 }
