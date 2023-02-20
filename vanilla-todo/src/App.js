@@ -18,7 +18,7 @@ class App extends Component {
       <ul id="${CONTAINER.TODO_LIST}"></ul>
     `;
   }
-  declare() {
+  mounted() {
     const { todos, editing } = this.state;
 
     new AddForm($app.querySelector("#AddForm"), {

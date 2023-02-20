@@ -27,7 +27,7 @@ export default class TodoList extends Component {
       .join("");
   }
 
-  declare() {
+  mounted() {
     const { editing, editTodo } = this.props;
     new EditForm($app.querySelector("#EditForm"), {
       editing,

@@ -11,7 +11,7 @@ export default class Component {
     observe(() => {
       this.render();
       this.setEvent();
-      this.declare();
+      this.mounted();
     });
   }
   initState() {
@@ -64,5 +64,5 @@ export default class Component {
       this.addEvent(event.type, event.target, event.handler);
     });
   }
-  declare() {}
+  mounted() {}
 }
