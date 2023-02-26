@@ -1,11 +1,16 @@
 import Component from "../Component.js";
+import { SELECTOR } from "../constants/_index.js";
 export default class EditForm extends Component {
   html() {
+    if (!this.props.editing) {
+      return;
+    }
+
+    const { editing } = this.props;
+
     return `
-        <form class="${SELECTOR.EDIT_FORM_CLASSNAME} ${
-      this.props.editing && this.props.editing.id === id ? "" : "hidden"
-    }">
-        <input value="${content}">
+        <form class="${SELECTOR.EDIT_FORM_CLASSNAME}">
+        <input value="${editing.content}">
         <button type="submit">Submit</button>
       </form>
         `;
@@ -15,7 +20,7 @@ export default class EditForm extends Component {
       {
         type: "submit",
         target: `.${SELECTOR.EDIT_FORM_CLASSNAME}`,
-        handler: this.handleSubmitEditing,
+        handler: this.handleSubmitEditing.bind(this),
       },
     ];
   }

@@ -29,7 +29,14 @@ export default class TodoList extends Component {
 
   mounted() {
     const { editing, editTodo } = this.props;
-    new EditForm($app.querySelector("#EditForm"), {
+    if (!editing) {
+      return;
+    }
+
+    const $editForm = document.querySelector(
+      `#${CONTAINER.EDIT_FORM}-${editing.id}`
+    );
+    new EditForm($editForm, {
       editing,
       editTodo: editTodo.bind(this),
     });
@@ -40,17 +47,17 @@ export default class TodoList extends Component {
       {
         type: "click",
         target: `.${SELECTOR.EDIT_BUTTON_CLASSNAME}`,
-        handler: this.handleClickStartEditing,
+        handler: this.handleClickStartEditing.bind(this),
       },
       {
         type: "click",
         target: `.${SELECTOR.DELETE_BUTTON_CLASSNAME}`,
-        handler: this.handleClickDelete,
+        handler: this.handleClickDelete.bind(this),
       },
       {
         type: "change",
         target: `.${SELECTOR.TOGGLE_CLASSNAME}`,
-        handler: this.handleChangeToggle,
+        handler: this.handleChangeToggle.bind(this),
       },
     ];
   }

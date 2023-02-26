@@ -20,7 +20,11 @@ export default class Component {
   deepCopy(obj) {
     var clone = {};
     for (var key in obj) {
-      if (typeof obj[key] == "object" && obj[key] != null) {
+      if (
+        !Array.isArray(obj[key]) &&
+        typeof obj[key] == "object" &&
+        obj[key] != null
+      ) {
         clone[key] = this.deepCopy(obj[key]);
       } else {
         clone[key] = obj[key];
@@ -37,13 +41,15 @@ export default class Component {
   }
   setState(newState) {
     for (const [key, value] of Object.entries(newState)) {
-      if (this.#state.hasOwnProperty(key)) continue;
+      if (!this.#state.hasOwnProperty(key)) continue;
       this.#state[key] = value;
     }
   }
   html() {}
   render() {
-    this.$root.innerHTML = this.html();
+    if (this.html()) {
+      this.$root.innerHTML = this.html();
+    }
   }
   event() {}
   addEvent(eventType, targetSelector, callback) {
@@ -53,7 +59,10 @@ export default class Component {
       }
       callback(event);
     };
-    this.$root.addEventListener(eventType, listener);
+
+    if (this.$root) {
+      this.$root.addEventListener(eventType, listener);
+    }
   }
   setEvent() {
     const events = this.event();

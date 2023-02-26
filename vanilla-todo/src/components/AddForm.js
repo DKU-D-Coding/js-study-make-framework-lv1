@@ -13,11 +13,10 @@ export default class AddForm extends Component {
       {
         type: "submit",
         target: `#${SELECTOR.ADD_FORM_ID}`,
-        handler: this.handleSubmitAdding,
+        handler: this.handleSubmitAdding.bind(this),
       },
     ];
   }
-
   handleSubmitAdding(event) {
     event.preventDefault();
 

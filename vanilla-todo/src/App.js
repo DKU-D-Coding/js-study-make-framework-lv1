@@ -21,10 +21,12 @@ class App extends Component {
   mounted() {
     const { todos, editing } = this.state;
 
-    new AddForm($app.querySelector("#AddForm"), {
+    console.log(todos);
+
+    new AddForm($app.querySelector(`#${CONTAINER.ADD_FORM}`), {
       addTodo: this.addTodo.bind(this),
     });
-    new TodoList($app.querySelector("#TodoList"), {
+    new TodoList($app.querySelector(`#${CONTAINER.TODO_LIST}`), {
       todos,
       editing,
       deleteTodo: this.deleteTodo.bind(this),
