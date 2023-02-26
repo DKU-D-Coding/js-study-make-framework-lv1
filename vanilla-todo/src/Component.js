@@ -17,27 +17,11 @@ export default class Component {
   initState() {
     return {};
   }
-  deepCopy(obj) {
-    var clone = {};
-    for (var key in obj) {
-      if (
-        !Array.isArray(obj[key]) &&
-        typeof obj[key] == "object" &&
-        obj[key] != null
-      ) {
-        clone[key] = this.deepCopy(obj[key]);
-      } else {
-        clone[key] = obj[key];
-      }
-    }
-
-    return clone;
-  }
   get state() {
-    return this.deepCopy(this.#state);
+    return Object.freeze({ ...this.#state });
   }
   get props() {
-    return this.deepCopy(this.#props);
+    return Object.freeze({ ...this.#props });
   }
   setState(newState) {
     for (const [key, value] of Object.entries(newState)) {
