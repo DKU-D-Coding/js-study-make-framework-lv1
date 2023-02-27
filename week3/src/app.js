@@ -1,83 +1,129 @@
-import Component from "./core/Component.js";
+import Component from "./Component.js";
 
-import Items from "./components/Items.js";
-import ItemAppender from "./components/ItemAppender.js";
+import ItemAppender from "./ItemAppender.js";
+import ItemsView from "./ItemsView.js";
 
-export default class App extends Component {
-    setup() {
-        this.$state = {
-            items: [],
+class App extends Component {
+    init() {
+        this.state = {
+            todoItems: [
+                { name: "코딩하기", done: false, updateState: false },
+                { name: "밥먹기", done: true, updateState: false },
+                { name: "양치하기", done: false, updateState: false },
+            ],
         };
     }
 
     template() {
         return `
-        <h2>3주차 JavaScript 실습 - 할 일</h2>
-        
-        <header data-component="item-appender"></header>
-        <main data-component="items"></main>
-    `;
+            <h1>3주차 미션 - 투두리스트 </h1>
+
+            <div id="item-appender"></div>
+            <div id="items-view"></div>
+        `;
     }
 
-    // mounted에서 자식 컴포넌트를 마운트 해줘야 한다.
-    mounted() {
-        const { todoItems, addItem, updateItem, deleteItem, toggleItem } = this;
-        const $itemAppender = this.$target.querySelector(
-            '[data-component="item-appender"]'
-        );
-        const $items = this.$target.querySelector('[data-component="items"]');
+    mount() {
+        //투두리스트 state를 불러옴
+        const { todoItems } = this.state;
+        const $itemAppender = this.$component.querySelector("#item-appender");
+        const $itemsView = this.$component.querySelector("#items-view");
 
-        new ItemAppender($itemAppender, {
-            addItem: addItem.bind(this),
+        // state를 props로 전달
+        new ItemAppender($itemAppender);
+        new ItemsView($itemsView, { todoItems });
+    }
+
+    setEvents() {
+        this.appendTodoItem();
+        this.deleteTodoItem();
+        this.toggleTodoItem();
+        this.updateTodoItem();
+    }
+
+    appendTodoItem() {
+        const { todoItems } = this.state;
+        const appendBtn = this.$component.querySelector("#append-btn");
+
+        if (appendBtn) {
+            appendBtn.addEventListener("click", () => {
+                const newTodo =
+                    this.$component.querySelector("#append-input").value;
+
+                this.setState({
+                    todoItems: [
+                        ...todoItems,
+                        { name: newTodo, done: false, updateState: false },
+                    ],
+                });
+            });
+        }
+    }
+
+    deleteTodoItem() {
+        const { todoItems } = this.state;
+        const $itemsView = this.$component.querySelector("#items-view");
+
+        $itemsView.addEventListener("click", (event) => {
+            if (event.target.id === "delete-btn") {
+                const todoIndex = parseInt(
+                    event.target.closest("li").getAttribute("data-id")
+                );
+                console.log(todoIndex);
+
+                const deletedTodoItems = todoItems.filter(
+                    (item, index) => index !== todoIndex
+                );
+                this.setState({ todoItems: deletedTodoItems });
+            }
         });
+    }
 
-        new Items($items, {
-            todoItems,
-            updateItem: updateItem.bind(this),
-            deleteItem: deleteItem.bind(this),
-            toggleItem: toggleItem.bind(this),
+    toggleTodoItem() {
+        const { todoItems } = this.state;
+        const $itemsView = this.$component.querySelector("#items-view");
+
+        $itemsView.addEventListener("change", (event) => {
+            if (event.target.id === "toggle-btn") {
+                const todoIndex = parseInt(
+                    event.target.closest("li").getAttribute("data-id")
+                );
+                const toggledTodoItems = [...todoItems];
+                toggledTodoItems[todoIndex] = {
+                    ...toggledTodoItems[todoIndex],
+                    done: !toggledTodoItems[todoIndex].done,
+                };
+                this.setState({ todoItems: toggledTodoItems });
+            }
         });
     }
 
-    get todoItems() {
-        const { items } = this.$state;
-        return items;
-    }
+    updateTodoItem() {
+        const { todoItems } = this.state;
+        const $itemsView = this.$component.querySelector("#items-view");
 
-    addItem(contents) {
-        const { items } = this.$state;
-        const seq = Math.max(0, ...items.map((v) => v.seq)) + 1;
-        const done = false;
-        const update = false;
-        this.setState({
-            items: [...items, { seq, contents, done, update }],
+        $itemsView.addEventListener("click", (event) => {
+            if (event.target.id === "update-btn") {
+                const todoIndex = parseInt(
+                    event.target.closest("li").getAttribute("data-id")
+                );
+
+                const updatedTodoItems = [...todoItems];
+                updatedTodoItems[todoIndex].updateState =
+                    !updatedTodoItems[todoIndex].updateState;
+
+                if (!updatedTodoItems[todoIndex].updateState) {
+                    const $itemsTitle = this.$component.querySelector(
+                        `#title-${todoIndex}`
+                    );
+
+                    updatedTodoItems[todoIndex].name = $itemsTitle.value;
+                }
+
+                this.setState({ todoItems: updatedTodoItems });
+            }
         });
-        this.$target.querySelector("#todoInput").value = "";
-    }
-
-    updateItem(seq) {
-        const items = [...this.$state.items];
-        const index = items.findIndex((v) => v.seq === seq);
-        items[index].update = !items[index].update;
-        items[index].contents = this.$target.querySelector(
-            "#title" + (index + 1)
-        ).value;
-        this.setState({ items });
-    }
-
-    deleteItem(seq) {
-        const items = [...this.$state.items];
-        items.splice(
-            items.findIndex((v) => v.seq === seq),
-            1
-        );
-        this.setState({ items });
-    }
-
-    toggleItem(seq) {
-        const items = [...this.$state.items];
-        const index = items.findIndex((v) => v.seq === seq);
-        items[index].done = !items[index].done;
-        this.setState({ items });
     }
 }
+
+new App(document.querySelector("#app"));

@@ -1,4 +1,4 @@
-import Component from "../core/Component.js";
+import Component from "./Component.js";
 
 export default class ItemAppender extends Component {
     template() {
@@ -8,13 +8,5 @@ export default class ItemAppender extends Component {
             <button class="btn" id="append-btn">추가</button>
         </div>
         `;
-    }
-
-    setEvent() {
-        const { addItem } = this.$props;
-
-        this.addEvent("click", "#append-btn", ({ target }) => {
-            addItem(this.$target.querySelector("#append-input").value);
-        });
     }
 }
