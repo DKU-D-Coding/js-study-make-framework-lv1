@@ -1,9 +1,9 @@
 import Component from "./Component.js";
 
-import ItemAppender from "./ItemAppender.js";
-import ItemsView from "./ItemsView.js";
+import ItemAppender from "./components/ItemAppender.js";
+import ItemsView from "./components/ItemsView.js";
 
-import { observable, observe } from "./Observer.js";
+import { observable } from "./Observer.js";
 
 class App extends Component {
     init() {

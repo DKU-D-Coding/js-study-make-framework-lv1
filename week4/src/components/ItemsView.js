@@ -1,9 +1,9 @@
-import Component from "./Component.js";
+import Component from "../Component.js";
 
-import { observable, observe } from "./Observer.js";
+import { observe } from "../Observer.js";
 
 export default class ItemsView extends Component {
-    init() {
+    updateState() {
         observe(() => {
             console.log("ItemsView 컴포넌트에서 옵저버...");
             console.log(this.$props);

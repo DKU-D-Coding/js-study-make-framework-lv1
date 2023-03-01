@@ -1,4 +1,4 @@
-import { observe } from "./Observer.js";
+import { observable, observe } from "./Observer.js";
 
 export default class Component {
     $component;
@@ -9,6 +9,7 @@ export default class Component {
         this.$component = $component;
         this.$props = $props;
         this.init();
+        this.updateState();
         this.render();
     }
 
@@ -40,11 +41,14 @@ export default class Component {
         //         { name: "양치하기", done: false, updateState: false },
         //     ],
         // });
-        observe(() => {
-            this.render();
-            console.log("렌더링 실행");
-        });
     }
 
     setEvents() {}
+
+    updateState() {
+        observe(() => {
+            this.render();
+            console.log("렌더링");
+        });
+    }
 }
