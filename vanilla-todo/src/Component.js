@@ -1,13 +1,18 @@
+import { observable, observe } from "./observer.js";
+
 export default class Component {
   $root;
-  #children;
   #state;
-  constructor($root, children) {
+  #props;
+  constructor($root, props) {
     this.$root = $root;
-    this.#children = children;
-    this.setState(this.initState());
-    this.render();
-    this.setEvent();
+    this.#props = props;
+    this.#state = observable(this.initState());
+    observe(() => {
+      this.render();
+      this.declare();
+      this.setEvent();
+    });
   }
   initState() {
     return {};
@@ -15,24 +20,20 @@ export default class Component {
   get state() {
     return this.#state;
   }
+  get props() {
+    return this.#props;
+  }
   setState(newState) {
-    this.#state = { ...this.#state, ...newState };
+    for (const [key, value] of Object.entries(newState)) {
+      if (this.#state[key] === undefined) continue;
+      this.#state[key] = value;
+    }
   }
   html() {
     return `<div></div>`;
   }
-  template() {
-    if (this.#children) {
-      const childNodes = this.#children
-        .map((child) => `<div id="${child}"></div>`)
-        .join("");
-
-      return this.html() + childNodes;
-    }
-    return this.html();
-  }
   render() {
-    this.$root.innerHTML = this.template();
+    this.$root.innerHTML = this.html();
   }
   setEvent() {}
   addEvent(eventType, targetSelector, callback) {
@@ -43,4 +44,5 @@ export default class Component {
       callback(event);
     });
   }
+  declare() {}
 }

@@ -2,14 +2,8 @@ import Component from "../Component.js";
 import Selector from "../constants/Selector.js";
 
 export default class TodoList extends Component {
-  initState() {
-    return {
-      todos: [],
-      editing: null,
-    };
-  }
   html() {
-    return this.state.todos
+    return this.props.todos
       .map(
         ({ id, content, done }) => `
     <li id="${id}" ${done ? 'class="done"' : ""}>
@@ -20,15 +14,15 @@ export default class TodoList extends Component {
       <span>${content}</span>
     </label>
       <form ${
-        this.state.editing && this.state.editing.id === id
-          ? `class="${Selector.EDIT_FORM_CLASSNAME}`
+        this.props.editing && this.props.editing.id === id
+          ? `class="${Selector.EDIT_FORM_CLASSNAME}"`
           : `class="${Selector.EDIT_FORM_CLASSNAME} hidden"`
       }>
         <input value="${content}">
         <button type="submit">Submit</button>
       </form>
       <button type="button" ${
-        this.state.editing && this.state.editing.id === id
+        this.props.editing && this.props.editing.id === id
           ? `class="${Selector.EDIT_BUTTON_CLASSNAME} hidden"`
           : `class="${Selector.EDIT_BUTTON_CLASSNAME}"`
       }>Edit</button>
@@ -42,17 +36,7 @@ export default class TodoList extends Component {
   }
 
   setEvent() {
-    const findTodo = (todoId) => {
-      const todo = this.state.todos.find((value) => value.id === todoId);
-      return todo;
-    };
-
-    const findTodoIndex = (todoId) => {
-      const todoIndex = this.state.todos.findIndex(
-        (value) => value.id === todoId
-      );
-      return todoIndex;
-    };
+    const { deleteTodo, toggleTodo, editTodo, startEditing } = this.props;
 
     const getTodoElementId = (todoElement) => {
       return Number(todoElement.id);
@@ -66,13 +50,6 @@ export default class TodoList extends Component {
       deleteTodo(getTodoElementId($targetTodo));
     };
 
-    const deleteTodo = (todoId) => {
-      this.setState({
-        todos: this.state.todos.filter((value) => value.id !== todoId),
-      });
-      this.render();
-    };
-
     const handleChangeToggle = (event) => {
       const {
         target: { parentNode: $labelElement },
@@ -81,34 +58,6 @@ export default class TodoList extends Component {
       const $targetTodo = $labelElement.parentNode;
 
       toggleTodo(getTodoElementId($targetTodo));
-    };
-
-    const toggleTodo = (todoId) => {
-      const todoIndex = findTodoIndex(todoId);
-      const oldTodo = findTodo(todoId);
-      const newTodo = {
-        ...oldTodo,
-        done: !oldTodo.done,
-      };
-
-      const oldTodos = [...this.state.todos];
-      oldTodos.splice(todoIndex, 1, newTodo);
-      this.setState({ todos: oldTodos });
-      this.render();
-    };
-
-    const editTodo = (content) => {
-      const newTodo = {
-        ...this.state.editing,
-        content,
-      };
-
-      const newTodos = [...this.state.todos];
-      newTodos.splice(findTodoIndex(this.state.editing.id), 1, newTodo);
-
-      this.setState({ editing: null, todos: newTodos });
-
-      this.render();
     };
 
     const handleSubmitEditing = (event) => {
@@ -123,25 +72,9 @@ export default class TodoList extends Component {
         target: { parentNode: $targetTodo },
       } = event;
 
-      startEditing(findTodo(getTodoElementId($targetTodo)));
+      startEditing(getTodoElementId($targetTodo));
     };
 
-    const paintEditForm = (todoId) => {
-      const $editingTodo = document.getElementById(todoId);
-      const $editForm = $editingTodo.querySelector("form");
-      const $editingButton = $editingTodo.querySelector(
-        Selector.EDIT_BUTTON_CLASSNAME
-      );
-
-      $editForm.classList.remove("hidden");
-      $editingButton.classList.add("hidden");
-    };
-
-    const startEditing = (todo) => {
-      this.setState({ editing: todo });
-
-      paintEditForm(todo.id);
-    };
     this.addEvent(
       "submit",
       `.${Selector.EDIT_FORM_CLASSNAME}`,
