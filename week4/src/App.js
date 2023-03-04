@@ -55,7 +55,11 @@ class App extends Component {
                 this.setState({
                     todoItems: [
                         ...todoItems,
-                        { name: newTodo, done: false, updateState: false },
+                        observable({
+                            name: newTodo,
+                            done: false,
+                            updateState: false,
+                        }),
                     ],
                 });
             });
