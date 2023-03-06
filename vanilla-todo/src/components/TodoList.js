@@ -1,10 +1,12 @@
-import Component from "../Component.js";
+import Component from "../core/Component.js";
 import { SELECTOR, CONTAINER } from "../constants/_index.js";
 import EditForm from "./EditForm.js";
+import { store, SET_EDITING, DELETE_TODO, TOGGLE_TODO } from "../store.js";
 
 export default class TodoList extends Component {
   html() {
-    return this.props.todos
+    const { todos, editingId } = store.getState();
+    return todos
       .map(
         ({ id, content, done }) => `
     <li id="${id}" class="todoItem ${done ? "done" : ""}">
@@ -16,7 +18,7 @@ export default class TodoList extends Component {
       </label>
       <div id="${CONTAINER.EDIT_FORM}-${id}"></div>
       <button type="button" class="${SELECTOR.EDIT_BUTTON_CLASSNAME} ${
-          this.props.editing && this.props.editing.id === id ? "hidden" : ""
+          editingId === id ? "hidden" : ""
         }">Edit</button>
       <button type="button" class="${
         SELECTOR.DELETE_BUTTON_CLASSNAME
@@ -28,18 +30,17 @@ export default class TodoList extends Component {
   }
 
   mounted() {
-    const { editing, editTodo } = this.props;
-    if (!editing) {
+    const { editingId } = store.getState();
+
+    if (!editingId) {
       return;
     }
 
     const $editForm = document.querySelector(
-      `#${CONTAINER.EDIT_FORM}-${editing.id}`
+      `#${CONTAINER.EDIT_FORM}-${editingId}`
     );
-    new EditForm($editForm, {
-      editing,
-      editTodo: editTodo.bind(this),
-    });
+
+    new EditForm($editForm);
   }
 
   event() {
@@ -69,16 +70,16 @@ export default class TodoList extends Component {
 
   handleClickStartEditing(event) {
     const { target } = event;
-    this.props.startEditing(this.getTodoIdFrom(target));
+    store.dispatch({ type: SET_EDITING, payload: this.getTodoIdFrom(target) });
   }
 
   handleClickDelete(event) {
     const { target } = event;
-    this.props.deleteTodo(this.getTodoIdFrom(target));
+    store.dispatch({ type: DELETE_TODO, payload: this.getTodoIdFrom(target) });
   }
 
   handleChangeToggle(event) {
     const { target } = event;
-    this.props.toggleTodo(this.getTodoIdFrom(target));
+    store.dispatch({ type: TOGGLE_TODO, payload: this.getTodoIdFrom(target) });
   }
 }

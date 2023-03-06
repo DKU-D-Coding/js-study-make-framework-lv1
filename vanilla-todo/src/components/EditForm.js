@@ -1,18 +1,21 @@
-import Component from "../Component.js";
+import Component from "../core/Component.js";
 import { SELECTOR } from "../constants/_index.js";
+import { store, EDIT_TODO, SET_EDITING_NULL } from "../store.js";
+
 export default class EditForm extends Component {
   html() {
-    if (!this.props.editing) {
+    const { editingId, todos } = store.getState();
+    if (!editingId) {
       return;
     }
 
-    const { editing } = this.props;
+    const editingTodo = todos.find((value) => value.id === editingId);
 
     return `
         <form class="${SELECTOR.EDIT_FORM_CLASSNAME}">
-        <input value="${editing.content}">
-        <button type="submit">Submit</button>
-      </form>
+          <input value="${editingTodo.content}">
+          <button type="submit">Submit</button>
+        </form>
         `;
   }
   event() {
@@ -27,8 +30,15 @@ export default class EditForm extends Component {
 
   handleSubmitEditing(event) {
     event.preventDefault();
-
-    const content = event.target[0].value;
-    this.props.editTodo(content);
+    store.dispatch({
+      type: EDIT_TODO,
+      payload: {
+        content: event.target[0].value,
+        id: store.getState().editingId,
+      },
+    });
+    store.dispatch({
+      type: SET_EDITING_NULL,
+    });
   }
 }

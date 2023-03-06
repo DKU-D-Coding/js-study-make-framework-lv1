@@ -1,22 +1,28 @@
-const todoService = {
-  todos: [],
+class TodoService {
+  #todos = [];
+
+  get todos() {
+    return this.#todos.map((todo) => Object.freeze(todo));
+  }
   findTodo(todoId) {
-    const { todos } = this;
-    const todoIndex = todos.findIndex((value) => value.id === todoId);
-    const todo = todos.find((value) => value.id === todoId);
-    return { todo, index: todos[todoIndex] };
-  },
+    const todoIndex = this.#todos.findIndex((value) => value.id === todoId);
+    const todo = this.#todos.find((value) => value.id === todoId);
+    return { todo, index: this.#todos[todoIndex] };
+  }
   addTodo(content) {
     const newTodo = {
       content,
       id: Date.now(),
       done: false,
     };
-    this.todos = [...this.todos, newTodo];
-  },
+    this.#todos = [...this.#todos, newTodo];
+
+    return this.todos;
+  }
   deleteTodo(todoId) {
-    this.todos = this.todos.filter((value) => value.id !== todoId);
-  },
+    this.#todos = this.#todos.filter((value) => value.id !== todoId);
+    return this.todos;
+  }
   toggleTodo(todoId) {
     const found = this.findTodo(todoId);
     const oldTodo = found.todo;
@@ -25,22 +31,26 @@ const todoService = {
       done: !oldTodo.done,
     };
 
-    const newTodos = [...this.todos];
+    const newTodos = [...this.#todos];
     newTodos.splice(found.index, 1, newTodo);
 
-    this.todos = newTodos;
-  },
-  editTodo(content, id) {
-    const { todos, editing } = this;
+    this.#todos = newTodos;
+    return this.todos;
+  }
+  editTodo(todo) {
+    const currentEditing = this.findTodo(todo.id);
+
     const newTodo = {
-      ...editing,
-      content,
+      ...currentEditing.todo,
+      content: todo.content,
     };
 
-    const newTodos = [...todos];
-    newTodos.splice(this.findTodo(id).index, 1, newTodo);
+    const newTodos = [...this.#todos];
+    newTodos.splice(currentEditing.index, 1, newTodo);
 
-    this.todos = newTodos;
-    // this.setState({ editing: null, todos: newTodos });
-  },
-};
+    this.#todos = newTodos;
+    return this.todos;
+  }
+}
+
+export default TodoService;

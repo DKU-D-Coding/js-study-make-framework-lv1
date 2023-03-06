@@ -1,6 +1,6 @@
 import { observable, observe } from "./observer.js";
 
-export default class Component {
+class Component {
   $root;
   #state;
   #props;
@@ -14,9 +14,6 @@ export default class Component {
       this.mounted();
     });
   }
-  initState() {
-    return {};
-  }
   get state() {
     return Object.freeze({ ...this.#state });
   }
@@ -29,13 +26,11 @@ export default class Component {
       this.#state[key] = value;
     }
   }
-  html() {}
   render() {
     if (this.html()) {
       this.$root.innerHTML = this.html();
     }
   }
-  event() {}
   addEvent(eventType, targetSelector, callback) {
     const listener = (event) => {
       if (!event.target.closest(targetSelector)) {
@@ -57,5 +52,12 @@ export default class Component {
       this.addEvent(event.type, event.target, event.handler);
     });
   }
+  initState() {
+    return {};
+  }
+  html() {}
+  event() {}
   mounted() {}
 }
+
+export default Component;
