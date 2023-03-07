@@ -6,8 +6,7 @@ class TodoService {
   }
   findTodo(todoId) {
     const todoIndex = this.#todos.findIndex((value) => value.id === todoId);
-    const todo = this.#todos.find((value) => value.id === todoId);
-    return { todo, index: this.#todos[todoIndex] };
+    return { todo: this.#todos[todoIndex], index: todoIndex };
   }
   addTodo(content) {
     const newTodo = {
@@ -24,30 +23,17 @@ class TodoService {
     return this.todos;
   }
   toggleTodo(todoId) {
-    const found = this.findTodo(todoId);
-    const oldTodo = found.todo;
-    const newTodo = {
-      ...oldTodo,
-      done: !oldTodo.done,
-    };
-
+    const { index, todo } = this.findTodo(todoId);
     const newTodos = [...this.#todos];
-    newTodos.splice(found.index, 1, newTodo);
-
+    newTodos[index] = { ...todo, done: !todo.done };
     this.#todos = newTodos;
     return this.todos;
   }
-  editTodo(todo) {
-    const currentEditing = this.findTodo(todo.id);
-
-    const newTodo = {
-      ...currentEditing.todo,
-      content: todo.content,
-    };
-
+  editTodo(newTodo) {
+    const { id, content } = newTodo;
+    const { index, todo: oldTodo } = this.findTodo(id);
     const newTodos = [...this.#todos];
-    newTodos.splice(currentEditing.index, 1, newTodo);
-
+    newTodos[index] = { ...oldTodo, content };
     this.#todos = newTodos;
     return this.todos;
   }
