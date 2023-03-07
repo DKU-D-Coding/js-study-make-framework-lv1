@@ -1,4 +1,2 @@
-import SELECTOR from "./Selector.js";
-import CONTAINER from "./Container.js";
-
-export { SELECTOR, CONTAINER };
+export { default as SELECTOR } from "./Selector.js";
+export { default as CONTAINER } from "./Container.js";
