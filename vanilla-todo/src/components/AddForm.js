@@ -1,6 +1,7 @@
 import Component from "../core/Component.js";
 import { SELECTOR } from "../constants/_index.js";
-import { store, ADD_TODO } from "../store.js";
+import { store, ADD_TODO, todoService } from "../store.js";
+
 export default class AddForm extends Component {
   html() {
     return `
@@ -24,7 +25,10 @@ export default class AddForm extends Component {
     const $addForm = document.getElementById(SELECTOR.ADD_FORM_ID);
     const $todoInput = $addForm.querySelector("input");
 
-    store.dispatch({ type: ADD_TODO, payload: $todoInput.value });
+    store.dispatch({
+      type: ADD_TODO,
+      payload: todoService.addTodo($todoInput.value),
+    });
     $todoInput.value = "";
   }
 }

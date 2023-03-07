@@ -1,7 +1,13 @@
 import Component from "../core/Component.js";
 import { SELECTOR, CONTAINER } from "../constants/_index.js";
 import EditForm from "./EditForm.js";
-import { store, SET_EDITING, DELETE_TODO, TOGGLE_TODO } from "../store.js";
+import {
+  store,
+  SET_EDITING,
+  DELETE_TODO,
+  TOGGLE_TODO,
+  todoService,
+} from "../store.js";
 
 export default class TodoList extends Component {
   html() {
@@ -75,11 +81,17 @@ export default class TodoList extends Component {
 
   handleClickDelete(event) {
     const { target } = event;
-    store.dispatch({ type: DELETE_TODO, payload: this.getTodoIdFrom(target) });
+    store.dispatch({
+      type: DELETE_TODO,
+      payload: todoService.deleteTodo(this.getTodoIdFrom(target)),
+    });
   }
 
   handleChangeToggle(event) {
     const { target } = event;
-    store.dispatch({ type: TOGGLE_TODO, payload: this.getTodoIdFrom(target) });
+    store.dispatch({
+      type: TOGGLE_TODO,
+      payload: todoService.toggleTodo(this.getTodoIdFrom(target)),
+    });
   }
 }

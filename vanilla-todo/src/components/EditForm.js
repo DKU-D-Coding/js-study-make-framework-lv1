@@ -1,6 +1,6 @@
 import Component from "../core/Component.js";
 import { SELECTOR } from "../constants/_index.js";
-import { store, EDIT_TODO, SET_EDITING_NULL } from "../store.js";
+import { store, EDIT_TODO, SET_EDITING_NULL, todoService } from "../store.js";
 
 export default class EditForm extends Component {
   html() {
@@ -32,10 +32,10 @@ export default class EditForm extends Component {
     event.preventDefault();
     store.dispatch({
       type: EDIT_TODO,
-      payload: {
+      payload: todoService.editTodo({
         content: event.target[0].value,
         id: store.getState().editingId,
-      },
+      }),
     });
     store.dispatch({
       type: SET_EDITING_NULL,
