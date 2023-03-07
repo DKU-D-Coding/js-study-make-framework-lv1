@@ -1,7 +1,7 @@
 import { createStore } from "./core/ReduxStore.js";
 import TodoService from "./services/TodoService.js";
 
-const todoService = new TodoService();
+export const todoService = new TodoService();
 
 const initState = {
   todos: todoService.todos,
@@ -18,13 +18,13 @@ export const SET_EDITING_NULL = "SET_EDITING_NULL";
 export const store = createStore((state = initState, action = {}) => {
   switch (action.type) {
     case ADD_TODO:
-      return { ...state, todos: todoService.addTodo(action.payload) };
+      return { ...state, todos: action.payload };
     case DELETE_TODO:
-      return { ...state, todos: todoService.deleteTodo(action.payload) };
+      return { ...state, todos: action.payload };
     case TOGGLE_TODO:
-      return { ...state, todos: todoService.toggleTodo(action.payload) };
+      return { ...state, todos: action.payload };
     case EDIT_TODO:
-      return { ...state, todos: todoService.editTodo(action.payload) };
+      return { ...state, todos: action.payload };
     case SET_EDITING:
       return { ...state, editingId: action.payload };
     case SET_EDITING_NULL:
