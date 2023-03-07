@@ -9,8 +9,8 @@ class Component {
     this.#props = props;
     this.#state = observable(this.initState());
     observe(() => {
-      this.render();
-      this.setEvent();
+      this.#render();
+      this.#setEvent();
       this.mounted();
     });
   }
@@ -26,10 +26,8 @@ class Component {
       this.#state[key] = value;
     }
   }
-  render() {
-    if (this.html()) {
-      this.$root.innerHTML = this.html();
-    }
+  #render() {
+    this.$root.innerHTML = this.html() || "";
   }
   addEvent(eventType, targetSelector, callback) {
     const listener = (event) => {
@@ -43,7 +41,7 @@ class Component {
       this.$root.addEventListener(eventType, listener);
     }
   }
-  setEvent() {
+  #setEvent() {
     const events = this.event();
     if (!events) {
       return;
