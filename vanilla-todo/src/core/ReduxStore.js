@@ -1,3 +1,4 @@
+import { frozen } from "../util/fronzen.js";
 import { observable } from "./observer.js";
 
 const createStore = (reducer) => {
@@ -12,18 +13,7 @@ const createStore = (reducer) => {
   };
 
   const getState = () => {
-    const fronzenState = new Proxy(
-      { ...state },
-      {
-        get(obj, prop) {
-          return obj[prop];
-        },
-        set() {
-          return false;
-        },
-      }
-    );
-    return fronzenState;
+    return frozen(state);
   };
 
   return { dispatch, getState };

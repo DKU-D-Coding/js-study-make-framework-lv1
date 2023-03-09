@@ -51,7 +51,6 @@ const handleChangeToggle = (event) => {
 const toggleTodo = (todoId) => {
   const todoIndex = findTodoIndex(todoId);
   const oldTodo = findTodo(todoId);
-  console.log(todoIndex, oldTodo);
   const newTodo = {
     ...oldTodo,
     done: !oldTodo.done,
