@@ -4,13 +4,7 @@ const MILLI_PER_FRAME = MILLISEC / FRAMES;
 
 let currentObserver = null;
 
-const observe = (observer) => {
-  currentObserver = observer;
-  observer();
-  currentObserver = null;
-};
-
-const batch = (callback, limit = MILLI_PER_FRAME) => {
+const debounce = (callback, limit = MILLI_PER_FRAME) => {
   let timeout;
   return () => {
     clearTimeout(timeout);
@@ -20,6 +14,12 @@ const batch = (callback, limit = MILLI_PER_FRAME) => {
   };
 };
 
+const observe = (observer) => {
+  currentObserver = debounce(observer);
+  observer();
+  currentObserver = null;
+};
+
 const observable = (props) => {
   let observers = new Set();
   const state = new Proxy(
@@ -27,7 +27,7 @@ const observable = (props) => {
     {
       get(target, prop) {
         if (typeof currentObserver === "function") {
-          observers.add(batch(currentObserver));
+          observers.add(currentObserver);
         }
         return target[prop];
       },

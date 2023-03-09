@@ -1,33 +1,33 @@
-import Component from "../Component.js";
-import Selector from "../constants/Selector.js";
+import Component from "../core/Component.js";
+import { SELECTOR, CONTAINER } from "../constants/_index.js";
+import EditForm from "./EditForm.js";
+import {
+  store,
+  SET_EDITING,
+  DELETE_TODO,
+  TOGGLE_TODO,
+  todoService,
+} from "../store.js";
 
 export default class TodoList extends Component {
   html() {
-    return this.props.todos
+    const { todos, editingId } = store.getState();
+    return todos
       .map(
         ({ id, content, done }) => `
-    <li id="${id}" ${done ? 'class="done"' : ""}>
-    <label>
-      <input type="checkbox" ${done ? "checked" : ""}  class="${
-          Selector.TOGGLE_CLASSNAME
+    <li id="${id}" class="todoItem ${done ? "done" : ""}">
+      <label>
+        <input type="checkbox" ${done ? "checked" : ""} class="${
+          SELECTOR.TOGGLE_CLASSNAME
         }">
-      <span>${content}</span>
-    </label>
-      <form ${
-        this.props.editing && this.props.editing.id === id
-          ? `class="${Selector.EDIT_FORM_CLASSNAME}"`
-          : `class="${Selector.EDIT_FORM_CLASSNAME} hidden"`
-      }>
-        <input value="${content}">
-        <button type="submit">Submit</button>
-      </form>
-      <button type="button" ${
-        this.props.editing && this.props.editing.id === id
-          ? `class="${Selector.EDIT_BUTTON_CLASSNAME} hidden"`
-          : `class="${Selector.EDIT_BUTTON_CLASSNAME}"`
-      }>Edit</button>
+        <span>${content}</span>
+      </label>
+      <div id="${CONTAINER.EDIT_FORM}-${id}"></div>
+      <button type="button" class="${SELECTOR.EDIT_BUTTON_CLASSNAME} ${
+          editingId === id ? "hidden" : ""
+        }">Edit</button>
       <button type="button" class="${
-        Selector.DELETE_BUTTON_CLASSNAME
+        SELECTOR.DELETE_BUTTON_CLASSNAME
       }">Delete</button>
     </li>
   `
@@ -35,65 +35,63 @@ export default class TodoList extends Component {
       .join("");
   }
 
-  setEvent() {
-    const { deleteTodo, toggleTodo, editTodo, startEditing } = this.props;
+  mounted() {
+    const { editingId } = store.getState();
 
-    const getTodoElementId = (todoElement) => {
-      return Number(todoElement.id);
-    };
+    if (!editingId) {
+      return;
+    }
 
-    const handleClickDelete = (event) => {
-      const {
-        target: { parentNode: $targetTodo },
-      } = event;
-
-      deleteTodo(getTodoElementId($targetTodo));
-    };
-
-    const handleChangeToggle = (event) => {
-      const {
-        target: { parentNode: $labelElement },
-      } = event;
-
-      const $targetTodo = $labelElement.parentNode;
-
-      toggleTodo(getTodoElementId($targetTodo));
-    };
-
-    const handleSubmitEditing = (event) => {
-      event.preventDefault();
-
-      const content = event.target[0].value;
-      editTodo(content);
-    };
-
-    const handleClickStartEditing = (event) => {
-      const {
-        target: { parentNode: $targetTodo },
-      } = event;
-
-      startEditing(getTodoElementId($targetTodo));
-    };
-
-    this.addEvent(
-      "submit",
-      `.${Selector.EDIT_FORM_CLASSNAME}`,
-      handleSubmitEditing
+    const $editForm = document.querySelector(
+      `#${CONTAINER.EDIT_FORM}-${editingId}`
     );
-    this.addEvent(
-      "click",
-      `.${Selector.EDIT_BUTTON_CLASSNAME}`,
-      handleClickStartEditing
-    );
-    this.addEvent(
-      "click",
-      `.${Selector.DELETE_BUTTON_CLASSNAME}`,
-      handleClickDelete
-    );
-    this.addEvent(
-      "change",
-      `.${Selector.TOGGLE_CLASSNAME}`,
-      handleChangeToggle
-    );
+
+    new EditForm($editForm);
+  }
+
+  event() {
+    return [
+      {
+        type: "click",
+        target: `.${SELECTOR.EDIT_BUTTON_CLASSNAME}`,
+        handler: this.handleClickStartEditing.bind(this),
+      },
+      {
+        type: "click",
+        target: `.${SELECTOR.DELETE_BUTTON_CLASSNAME}`,
+        handler: this.handleClickDelete.bind(this),
+      },
+      {
+        type: "change",
+        target: `.${SELECTOR.TOGGLE_CLASSNAME}`,
+        handler: this.handleChangeToggle.bind(this),
+      },
+    ];
+  }
+
+  getTodoIdFrom($targetElement) {
+    const $todoElement = $targetElement.closest(".todoItem");
+    return Number($todoElement.id);
+  }
+
+  handleClickStartEditing(event) {
+    const { target } = event;
+    store.dispatch({ type: SET_EDITING, payload: this.getTodoIdFrom(target) });
+  }
+
+  handleClickDelete(event) {
+    const { target } = event;
+    store.dispatch({
+      type: DELETE_TODO,
+      payload: todoService.deleteTodo(this.getTodoIdFrom(target)),
+    });
+  }
+
+  handleChangeToggle(event) {
+    const { target } = event;
+    store.dispatch({
+      type: TOGGLE_TODO,
+      payload: todoService.toggleTodo(this.getTodoIdFrom(target)),
+    });
   }
 }

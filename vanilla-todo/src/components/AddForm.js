@@ -1,24 +1,34 @@
-import Component from "../Component.js";
-import Selector from "../constants/Selector.js";
+import Component from "../core/Component.js";
+import { SELECTOR } from "../constants/_index.js";
+import { store, ADD_TODO, todoService } from "../store.js";
+
 export default class AddForm extends Component {
   html() {
     return `
-        <form id="addForm">
+        <form id="${SELECTOR.ADD_FORM_ID}">
             <input placeholder="Enter Todo..." />
             <button type="submit">Submit</button>
         </form>`;
   }
-  setEvent() {
-    const handleSubmitAdding = (event) => {
-      event.preventDefault();
+  event() {
+    return [
+      {
+        type: "submit",
+        target: `#${SELECTOR.ADD_FORM_ID}`,
+        handler: this.handleSubmitAdding.bind(this),
+      },
+    ];
+  }
+  handleSubmitAdding(event) {
+    event.preventDefault();
 
-      const $addForm = document.getElementById(Selector.ADD_FORM_ID);
-      const $todoInput = $addForm.querySelector("input");
+    const $addForm = document.getElementById(SELECTOR.ADD_FORM_ID);
+    const $todoInput = $addForm.querySelector("input");
 
-      this.props.addTodo($todoInput.value);
-
-      $todoInput.value = "";
-    };
-    this.addEvent("submit", `#${Selector.ADD_FORM_ID}`, handleSubmitAdding);
+    store.dispatch({
+      type: ADD_TODO,
+      payload: todoService.addTodo($todoInput.value),
+    });
+    $todoInput.value = "";
   }
 }
