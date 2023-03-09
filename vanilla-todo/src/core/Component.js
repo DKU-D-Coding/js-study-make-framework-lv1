@@ -1,3 +1,4 @@
+import { frozen } from "../util/fronzen.js";
 import { observable, observe } from "./observer.js";
 
 class Component {
@@ -15,10 +16,10 @@ class Component {
     });
   }
   get state() {
-    return Object.freeze({ ...this.#state });
+    return frozen({ ...this.#state });
   }
   get props() {
-    return Object.freeze({ ...this.#props });
+    return frozen({ ...this.#props });
   }
   setState(newState) {
     for (const [key, value] of Object.entries(newState)) {
@@ -29,7 +30,7 @@ class Component {
   #render() {
     this.$root.innerHTML = this.html() || "";
   }
-  addEvent(eventType, targetSelector, callback) {
+  #addEvent(eventType, targetSelector, callback) {
     const listener = (event) => {
       if (!event.target.closest(targetSelector)) {
         return;
@@ -47,7 +48,7 @@ class Component {
       return;
     }
     events.forEach((event) => {
-      this.addEvent(event.type, event.target, event.handler);
+      this.#addEvent(event.type, event.target, event.handler);
     });
   }
   initState() {

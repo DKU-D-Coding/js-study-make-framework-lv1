@@ -1,8 +1,10 @@
+import { frozen } from "../util/fronzen.js";
+
 class TodoService {
   #todos = [];
 
   get todos() {
-    return this.#todos.map((todo) => Object.freeze(todo));
+    return frozen([...this.#todos]);
   }
   findTodo(todoId) {
     const todoIndex = this.#todos.findIndex((value) => value.id === todoId);
