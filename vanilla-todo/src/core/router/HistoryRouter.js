@@ -1,43 +1,34 @@
-import { frozen } from "../../util/fronzen.js";
+import { CUSTOM_EVENT } from "../../constants/_index.js";
+import { deepCopy } from "../../util/deepCopy.js";
 
-const locationChange = new CustomEvent("locationChange");
+const locationChange = new CustomEvent(CUSTOM_EVENT.LOCATION_CHANGE);
 
 export default class HistoryRouter {
-  #path = "/";
-  #queryString = {};
+  #url;
   constructor() {
+    this.#url = new URL(window.location.href);
     window.addEventListener("popstate", (e) => {
-      this.#setUrl(e.target.location.pathname);
+      const {
+        target: {
+          location: { pathname, search },
+        },
+      } = e;
+
+      this.#setUrl(pathname + search);
     });
   }
   get path() {
-    return this.#path;
+    return this.#url.pathname;
   }
   get queryString() {
-    return frozen(this.#queryString);
-  }
-  #parse(url) {
-    const splitUrl = url.split("?");
-    const path = splitUrl[0];
     const queryString = {};
-
-    if (splitUrl.length > 1) {
-      splitUrl[1].split("&").forEach((query) => {
-        const [key, value] = query.split("=");
-        if (key && value) {
-          queryString[key] = value;
-        }
-      });
+    for (const [key, value] of this.#url.searchParams.entries()) {
+      queryString[key] = value;
     }
-
-    return { path, queryString };
+    return deepCopy(queryString);
   }
-
   #setUrl(url) {
-    const { path, queryString } = this.#parse(url);
-
-    this.#path = path;
-    this.#queryString = queryString;
+    this.#url.href = this.#url.origin + url;
     window.dispatchEvent(locationChange);
   }
   push(url) {
@@ -47,7 +38,7 @@ export default class HistoryRouter {
 
     this.#setUrl(url);
 
-    if (url === location.pathname) {
+    if (url === location.href) {
       history.replaceState({}, "", url);
     } else {
       history.pushState({}, "", url);
