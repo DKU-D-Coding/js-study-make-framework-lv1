@@ -1,4 +1,5 @@
-import { frozen } from "../util/fronzen.js";
+import { deepCopy } from "../util/deepCopy.js";
+import { setState } from "../util/setState.js";
 import { observable } from "./observer.js";
 
 const createStore = (reducer) => {
@@ -6,14 +7,11 @@ const createStore = (reducer) => {
 
   const dispatch = (action) => {
     const newState = reducer(state, action);
-    for (const [key, value] of Object.entries(newState)) {
-      if (!state.hasOwnProperty(key)) continue;
-      state[key] = value;
-    }
+    setState(state, newState);
   };
 
   const getState = () => {
-    return frozen(state);
+    return deepCopy(state);
   };
 
   return { dispatch, getState };

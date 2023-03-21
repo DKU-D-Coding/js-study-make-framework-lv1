@@ -1,10 +1,10 @@
-import { frozen } from "../util/fronzen.js";
+import { deepCopy } from "../util/deepCopy.js";
 
 class TodoService {
   #todos = [];
 
   get todos() {
-    return frozen([...this.#todos]);
+    return deepCopy([...this.#todos]);
   }
   findTodo(todoId) {
     const todoIndex = this.#todos.findIndex((value) => value.id === todoId);

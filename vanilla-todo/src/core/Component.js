@@ -1,4 +1,4 @@
-import { frozen } from "../util/fronzen.js";
+import { deepCopy } from "../util/deepCopy.js";
 import { observable, observe } from "./observer.js";
 
 class Component {
@@ -16,10 +16,10 @@ class Component {
     });
   }
   get state() {
-    return frozen({ ...this.#state });
+    return deepCopy(this.#state);
   }
   get props() {
-    return frozen({ ...this.#props });
+    return deepCopy(this.#props);
   }
   setState(newState) {
     for (const [key, value] of Object.entries(newState)) {
@@ -43,12 +43,9 @@ class Component {
     }
   }
   #setEvent() {
-    const events = this.event();
-    if (!events) {
-      return;
-    }
-    events.forEach((event) => {
-      this.#addEvent(event.type, event.target, event.handler);
+    const events = this.event() || [];
+    events.forEach(({ type, target, handler }) => {
+      this.#addEvent(type, target, handler);
     });
   }
   initState() {
