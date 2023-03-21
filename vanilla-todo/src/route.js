@@ -1,3 +1,4 @@
+import { CUSTOM_EVENT } from "./constants/_index.js";
 import HistoryRouter from "./core/router/HistoryRouter.js";
 import { Main, Move } from "./pages/_index.js";
 
@@ -20,4 +21,4 @@ const renderPath = () => {
 
 renderPath();
 
-window.addEventListener("locationChange", renderPath);
+window.addEventListener(CUSTOM_EVENT.LOCATION_CHANGE, renderPath);
