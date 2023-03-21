@@ -1,3 +1,4 @@
+import { deepCopy } from "../util/deepCopy.js";
 import { observable, observe } from "./observer.js";
 
 class Component {
@@ -15,10 +16,10 @@ class Component {
     });
   }
   get state() {
-    return Object.freeze({ ...this.#state });
+    return deepCopy(this.#state);
   }
   get props() {
-    return Object.freeze({ ...this.#props });
+    return deepCopy(this.#props);
   }
   setState(newState) {
     for (const [key, value] of Object.entries(newState)) {
@@ -29,7 +30,7 @@ class Component {
   #render() {
     this.$root.innerHTML = this.html() || "";
   }
-  addEvent(eventType, targetSelector, callback) {
+  #addEvent(eventType, targetSelector, callback) {
     const listener = (event) => {
       if (!event.target.closest(targetSelector)) {
         return;
@@ -42,12 +43,9 @@ class Component {
     }
   }
   #setEvent() {
-    const events = this.event();
-    if (!events) {
-      return;
-    }
-    events.forEach((event) => {
-      this.addEvent(event.type, event.target, event.handler);
+    const events = this.event() || [];
+    events.forEach(({ type, target, handler }) => {
+      this.#addEvent(type, target, handler);
     });
   }
   initState() {

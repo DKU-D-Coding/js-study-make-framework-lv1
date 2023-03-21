@@ -1,8 +1,10 @@
+import { deepCopy } from "../util/deepCopy.js";
+
 class TodoService {
   #todos = [];
 
   get todos() {
-    return this.#todos.map((todo) => Object.freeze(todo));
+    return deepCopy([...this.#todos]);
   }
   findTodo(todoId) {
     const todoIndex = this.#todos.findIndex((value) => value.id === todoId);

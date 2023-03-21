@@ -3,6 +3,7 @@ const CONTAINER = {
   EDIT_FORM: "EditForm",
   TITLE: "Title",
   TODO_LIST: "TodoList",
+  FILTER: "Filter",
 };
 
 export default CONTAINER;
