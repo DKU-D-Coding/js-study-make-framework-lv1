@@ -4,6 +4,8 @@ const SELECTOR = {
   EDIT_BUTTON_CLASSNAME: "editing",
   TOGGLE_CLASSNAME: "toggle",
   DELETE_BUTTON_CLASSNAME: "delete",
+  FILTER_TODO_ID: "filterTodo",
+  FILTER_DONE_ID: "filterDone",
 };
 
 export default SELECTOR;

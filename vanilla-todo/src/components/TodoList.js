@@ -1,12 +1,13 @@
 import Component from "../core/Component.js";
-import { SELECTOR, CONTAINER } from "../constants/_index.js";
+import { SELECTOR, CONTAINER, TODO_FILTER } from "../constants/_index.js";
 import EditForm from "./EditForm.js";
 import { store, SET_EDITING, SET_TODO, todoService } from "../store.js";
 
 export default class TodoList extends Component {
   html() {
     const { todos, editingId } = store.getState();
-    return todos
+
+    return this.filteredTodos(todos)
       .map(
         ({ id, content, done }) => `
     <li id="${id}" class="todoItem ${done ? "done" : ""}">
@@ -28,7 +29,17 @@ export default class TodoList extends Component {
       )
       .join("");
   }
-
+  filteredTodos(todos) {
+    const { filter } = store.getState();
+    switch (filter) {
+      case TODO_FILTER.TODO:
+        return todos.filter((todo) => !todo.done);
+      case TODO_FILTER.DONE:
+        return todos.filter((todo) => todo.done);
+      case TODO_FILTER.ALL:
+        return todos;
+    }
+  }
   mounted() {
     const { editingId } = store.getState();
 
