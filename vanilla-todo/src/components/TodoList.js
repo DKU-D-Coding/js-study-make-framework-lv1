@@ -1,13 +1,7 @@
 import Component from "../core/Component.js";
 import { SELECTOR, CONTAINER } from "../constants/_index.js";
 import EditForm from "./EditForm.js";
-import {
-  store,
-  SET_EDITING,
-  DELETE_TODO,
-  TOGGLE_TODO,
-  todoService,
-} from "../store.js";
+import { store, SET_EDITING, SET_TODO, todoService } from "../store.js";
 
 export default class TodoList extends Component {
   html() {
@@ -82,7 +76,7 @@ export default class TodoList extends Component {
   handleClickDelete(event) {
     const { target } = event;
     store.dispatch({
-      type: DELETE_TODO,
+      type: SET_TODO,
       payload: todoService.deleteTodo(this.getTodoIdFrom(target)),
     });
   }
@@ -90,7 +84,7 @@ export default class TodoList extends Component {
   handleChangeToggle(event) {
     const { target } = event;
     store.dispatch({
-      type: TOGGLE_TODO,
+      type: SET_TODO,
       payload: todoService.toggleTodo(this.getTodoIdFrom(target)),
     });
   }
